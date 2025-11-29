@@ -38,34 +38,34 @@ class KK_Install {
         global $wpdb;
         $charset_collate = $wpdb->get_charset_collate();
 
-        // Tabuľka kníh
-        $sql_books = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}kk_books (
-            id bigint(20) NOT NULL AUTO_INCREMENT,
-            user_id bigint(20) NOT NULL,
+        // Tabuľka kníh - dbDelta vyžaduje špecifický formát
+        $sql_books = "CREATE TABLE {$wpdb->prefix}kk_books (
+            id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            user_id bigint(20) unsigned NOT NULL,
             title varchar(255) NOT NULL,
             author varchar(255) NOT NULL,
             isbn varchar(20) DEFAULT NULL,
             genre varchar(100) NOT NULL,
-            description text,
+            description text DEFAULT NULL,
             book_condition tinyint(2) NOT NULL DEFAULT 5,
             image_url varchar(500) DEFAULT NULL,
             lending_price decimal(10,2) NOT NULL DEFAULT 0.00,
             status varchar(20) NOT NULL DEFAULT 'available',
             created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            PRIMARY KEY (id),
+            updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY  (id),
             KEY user_id (user_id),
             KEY status (status),
             KEY genre (genre)
         ) $charset_collate;";
 
         // Tabuľka požičaní
-        $sql_lendings = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}kk_lendings (
-            id bigint(20) NOT NULL AUTO_INCREMENT,
-            book_id bigint(20) NOT NULL,
-            borrower_id bigint(20) NOT NULL,
-            lender_id bigint(20) NOT NULL,
-            order_id bigint(20) DEFAULT NULL,
+        $sql_lendings = "CREATE TABLE {$wpdb->prefix}kk_lendings (
+            id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            book_id bigint(20) unsigned NOT NULL,
+            borrower_id bigint(20) unsigned NOT NULL,
+            lender_id bigint(20) unsigned NOT NULL,
+            order_id bigint(20) unsigned DEFAULT NULL,
             lending_price decimal(10,2) NOT NULL DEFAULT 0.00,
             owner_commission decimal(10,2) NOT NULL DEFAULT 0.00,
             community_commission decimal(10,2) NOT NULL DEFAULT 0.00,
@@ -80,7 +80,7 @@ class KK_Install {
             shipping_country varchar(50) DEFAULT NULL,
             shipping_phone varchar(50) DEFAULT NULL,
             created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (id),
+            PRIMARY KEY  (id),
             KEY book_id (book_id),
             KEY borrower_id (borrower_id),
             KEY lender_id (lender_id),
@@ -88,31 +88,31 @@ class KK_Install {
         ) $charset_collate;";
 
         // Tabuľka hodnotení
-        $sql_ratings = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}kk_ratings (
-            id bigint(20) NOT NULL AUTO_INCREMENT,
-            book_id bigint(20) NOT NULL,
-            user_id bigint(20) NOT NULL,
-            lending_id bigint(20) NOT NULL,
+        $sql_ratings = "CREATE TABLE {$wpdb->prefix}kk_ratings (
+            id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            book_id bigint(20) unsigned NOT NULL,
+            user_id bigint(20) unsigned NOT NULL,
+            lending_id bigint(20) unsigned NOT NULL,
             rating tinyint(1) NOT NULL,
-            review text,
+            review text DEFAULT NULL,
             created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (id),
+            PRIMARY KEY  (id),
             KEY book_id (book_id),
             KEY user_id (user_id),
             UNIQUE KEY unique_rating (lending_id)
         ) $charset_collate;";
 
         // Tabuľka notifikácií
-        $sql_notifications = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}kk_notifications (
-            id bigint(20) NOT NULL AUTO_INCREMENT,
-            user_id bigint(20) NOT NULL,
+        $sql_notifications = "CREATE TABLE {$wpdb->prefix}kk_notifications (
+            id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            user_id bigint(20) unsigned NOT NULL,
             type varchar(50) NOT NULL,
             title varchar(255) NOT NULL,
             message text NOT NULL,
             link varchar(500) DEFAULT NULL,
             is_read tinyint(1) NOT NULL DEFAULT 0,
             created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (id),
+            PRIMARY KEY  (id),
             KEY user_id (user_id),
             KEY is_read (is_read)
         ) $charset_collate;";

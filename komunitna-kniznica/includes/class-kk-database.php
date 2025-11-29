@@ -37,6 +37,16 @@ class KK_Database {
     }
 
     /**
+     * Kontrola či tabuľka existuje
+     */
+    public static function table_exists($table) {
+        global $wpdb;
+        $table_name = self::get_table_name($table);
+        $query = $wpdb->prepare("SHOW TABLES LIKE %s", $table_name);
+        return $wpdb->get_var($query) === $table_name;
+    }
+
+    /**
      * Vloženie záznamu
      */
     public static function insert($table, $data, $format = null) {
@@ -48,11 +58,18 @@ class KK_Database {
             return false;
         }
 
+        // Kontrola či tabuľka existuje
+        if (!self::table_exists($table)) {
+            error_log('KK Database Error: Table does not exist - ' . $table_name);
+            return false;
+        }
+
         $result = $wpdb->insert($table_name, $data, $format);
 
         if ($result === false) {
             error_log('KK Database Error: Insert failed - ' . $wpdb->last_error);
             error_log('KK Database Error: Last query - ' . $wpdb->last_query);
+            error_log('KK Database Error: Data - ' . print_r($data, true));
             return false;
         }
 
