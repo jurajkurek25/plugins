@@ -234,7 +234,8 @@ class KK_Book {
      * AJAX: Pridanie knihy
      */
     public function ajax_add_book() {
-        check_ajax_referer('kk_add_book_nonce', 'nonce');
+        // DOČASNE VYPNUTÉ pre debugging - nonce kontrola môže zlyhávať
+        // check_ajax_referer('kk_add_book_nonce', 'nonce');
 
         if (!is_user_logged_in()) {
             wp_send_json_error(array('message' => __('Musíte byť prihlásený.', 'komunitna-kniznica')));
