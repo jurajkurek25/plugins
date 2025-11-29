@@ -14,7 +14,12 @@ class BBK_Install {
      */
     public static function activate() {
         self::create_tables();
-        self::create_dummy_product();
+
+        // Vytvor dummy produkt len ak je WooCommerce dostupný
+        if (class_exists('WooCommerce')) {
+            self::create_dummy_product();
+        }
+
         self::set_default_options();
         self::setup_cron();
         self::create_capabilities();

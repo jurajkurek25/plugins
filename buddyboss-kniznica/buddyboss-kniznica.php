@@ -99,25 +99,22 @@ class BuddyBoss_Kniznica {
      * Kontrola závislostí (BuddyBoss a WooCommerce)
      */
     public function check_dependencies() {
-        $errors = array();
-
-        // Kontrola BuddyBoss
+        // Kontrola BuddyBoss - len varovanie, nedeaktivujeme
         if (!function_exists('buddypress') && !class_exists('BuddyBoss_Platform')) {
-            $errors[] = __('BuddyBoss Komunitná Knižnica vyžaduje nainštalovaný a aktívny BuddyBoss Platform plugin.', 'buddyboss-kniznica');
-        }
-
-        // Kontrola WooCommerce
-        if (!class_exists('WooCommerce')) {
-            $errors[] = __('BuddyBoss Komunitná Knižnica vyžaduje nainštalovaný a aktívny WooCommerce plugin.', 'buddyboss-kniznica');
-        }
-
-        if (!empty($errors)) {
-            add_action('admin_notices', function() use ($errors) {
-                foreach ($errors as $error) {
-                    echo '<div class="notice notice-error"><p>' . esc_html($error) . '</p></div>';
-                }
+            add_action('admin_notices', function() {
+                echo '<div class="notice notice-warning is-dismissible"><p>';
+                echo '<strong>BuddyBoss Komunitná Knižnica:</strong> Pre plnú funkcionalitu prosím nainštalujte a aktivujte BuddyBoss Platform plugin.';
+                echo '</p></div>';
             });
-            deactivate_plugins(BBK_PLUGIN_BASENAME);
+        }
+
+        // Kontrola WooCommerce - len varovanie, nedeaktivujeme
+        if (!class_exists('WooCommerce')) {
+            add_action('admin_notices', function() {
+                echo '<div class="notice notice-warning is-dismissible"><p>';
+                echo '<strong>BuddyBoss Komunitná Knižnica:</strong> Pre plnú funkcionalitu prosím nainštalujte a aktivujte WooCommerce plugin.';
+                echo '</p></div>';
+            });
         }
     }
 
@@ -127,11 +124,21 @@ class BuddyBoss_Kniznica {
     public function init() {
         // Inicializácia tried
         BBK_Database::get_instance();
-        BBK_BuddyBoss::get_instance();
+
+        // BuddyBoss integrácia (len ak je dostupný)
+        if (function_exists('buddypress') || class_exists('BuddyBoss_Platform')) {
+            BBK_BuddyBoss::get_instance();
+        }
+
         BBK_Book::get_instance();
         BBK_Lending::get_instance();
         BBK_Rating::get_instance();
-        BBK_WooCommerce::get_instance();
+
+        // WooCommerce integrácia (len ak je dostupný)
+        if (class_exists('WooCommerce')) {
+            BBK_WooCommerce::get_instance();
+        }
+
         BBK_Notifications::get_instance();
         BBK_Public::get_instance();
         BBK_Shortcodes::get_instance();
