@@ -13,6 +13,10 @@ class KK_Install {
      * Aktivácia pluginu
      */
     public static function activate() {
+        // DÔLEŽITÉ: Vymazanie starých tabuliek pred vytvorením nových
+        // Toto opravuje problém s nesprávnou štruktúrou z predchádzajúcich verzií
+        self::drop_old_tables();
+
         self::create_tables();
         self::create_dummy_product();
         self::set_default_options();
@@ -21,6 +25,19 @@ class KK_Install {
 
         // Flush rewrite rules
         flush_rewrite_rules();
+    }
+
+    /**
+     * Vymazanie starých tabuliek (oprava pre nesprávnu štruktúru)
+     */
+    private static function drop_old_tables() {
+        global $wpdb;
+
+        // Vymaž staré tabuľky ak existujú
+        $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}kk_books");
+        $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}kk_lendings");
+        $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}kk_ratings");
+        $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}kk_notifications");
     }
 
     /**
