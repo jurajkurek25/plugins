@@ -33,6 +33,20 @@ class KK_Book {
             return new WP_Error('not_logged_in', __('Musíte byť prihlásený.', 'komunitna-kniznica'));
         }
 
+        // Validácia required polí
+        if (empty($data['title'])) {
+            return new WP_Error('missing_title', __('Názov knihy je povinný.', 'komunitna-kniznica'));
+        }
+        if (empty($data['author'])) {
+            return new WP_Error('missing_author', __('Autor je povinný.', 'komunitna-kniznica'));
+        }
+        if (empty($data['genre'])) {
+            return new WP_Error('missing_genre', __('Žáner je povinný.', 'komunitna-kniznica'));
+        }
+        if (!isset($data['book_condition']) || $data['book_condition'] < 1 || $data['book_condition'] > 10) {
+            return new WP_Error('invalid_condition', __('Stav knihy musí byť medzi 1 a 10.', 'komunitna-kniznica'));
+        }
+
         $user_id = get_current_user_id();
 
         $book_data = array(
@@ -41,10 +55,10 @@ class KK_Book {
             'author' => sanitize_text_field($data['author']),
             'isbn' => !empty($data['isbn']) ? sanitize_text_field($data['isbn']) : null,
             'genre' => sanitize_text_field($data['genre']),
-            'description' => sanitize_textarea_field($data['description']),
+            'description' => !empty($data['description']) ? sanitize_textarea_field($data['description']) : '',
             'book_condition' => absint($data['book_condition']),
             'image_url' => !empty($data['image_url']) ? esc_url_raw($data['image_url']) : null,
-            'lending_price' => floatval($data['lending_price']),
+            'lending_price' => isset($data['lending_price']) ? floatval($data['lending_price']) : 0,
             'status' => 'available'
         );
 
@@ -54,7 +68,7 @@ class KK_Book {
             return $book_id;
         }
 
-        return new WP_Error('insert_failed', __('Nepodarilo sa pridať knihu.', 'komunitna-kniznica'));
+        return new WP_Error('insert_failed', __('Nepodarilo sa pridať knihu do databázy.', 'komunitna-kniznica'));
     }
 
     /**

@@ -135,9 +135,48 @@
             $submitBtn.prop('disabled', true).text('Pridávam...');
             $message.html('');
 
+            // Funkcia na pridanie knihy
+            function addBook(imageUrl) {
+                var formDataObj = {
+                    action: 'kk_add_book',
+                    nonce: kkPublic.nonces.add_book,
+                    title: $('#book_title').val(),
+                    author: $('#book_author').val(),
+                    isbn: $('#book_isbn').val(),
+                    genre: $('#book_genre').val(),
+                    description: $('#book_description').val(),
+                    book_condition: $('#book_condition').val(),
+                    lending_price: $('#book_lending_price').val(),
+                    image_url: imageUrl || ''
+                };
+
+                $.ajax({
+                    url: kkPublic.ajaxUrl,
+                    type: 'POST',
+                    data: formDataObj,
+                    success: function(response) {
+                        if (response.success) {
+                            $message.html('<div class="kk-success-message" style="background: #4ade80; color: #0f1419; padding: 15px; border-radius: 5px; margin: 15px 0;">' + response.data.message + '</div>');
+                            $form[0].reset();
+                            $('#kk-image-preview').html('');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            $message.html('<div class="kk-error-message" style="background: #f87171; color: #fff; padding: 15px; border-radius: 5px; margin: 15px 0;">' + response.data.message + '</div>');
+                            $submitBtn.prop('disabled', false).text('Pridať knihu');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', status, error);
+                        $message.html('<div class="kk-error-message" style="background: #f87171; color: #fff; padding: 15px; border-radius: 5px; margin: 15px 0;">Nastala chyba pri komunikácii so serverom. Skúste to prosím znova.</div>');
+                        $submitBtn.prop('disabled', false).text('Pridať knihu');
+                    }
+                });
+            }
+
             // Upload obrázka najprv (ak existuje)
             var imageFile = $('#book_image')[0].files[0];
-            var imageUrl = '';
 
             if (imageFile) {
                 var formData = new FormData();
@@ -151,50 +190,23 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    async: false,
                     success: function(response) {
                         if (response.success) {
-                            imageUrl = response.data.image_url;
+                            addBook(response.data.image_url);
+                        } else {
+                            // Pridaj knihu aj bez obrázka
+                            addBook('');
                         }
+                    },
+                    error: function() {
+                        // Pridaj knihu aj bez obrázka
+                        addBook('');
                     }
                 });
+            } else {
+                // Žiadny obrázok, pridaj knihu priamo
+                addBook('');
             }
-
-            // Pridanie knihy
-            var formDataObj = {
-                action: 'kk_add_book',
-                nonce: kkPublic.nonces.add_book,
-                title: $('#book_title').val(),
-                author: $('#book_author').val(),
-                isbn: $('#book_isbn').val(),
-                genre: $('#book_genre').val(),
-                description: $('#book_description').val(),
-                book_condition: $('#book_condition').val(),
-                lending_price: $('#book_lending_price').val(),
-                image_url: imageUrl
-            };
-
-            $.ajax({
-                url: kkPublic.ajaxUrl,
-                type: 'POST',
-                data: formDataObj,
-                success: function(response) {
-                    if (response.success) {
-                        $message.html('<div class="kk-success-message">' + response.data.message + '</div>');
-                        $form[0].reset();
-                        setTimeout(function() {
-                            location.reload();
-                        }, 2000);
-                    } else {
-                        $message.html('<div class="kk-error-message">' + response.data.message + '</div>');
-                        $submitBtn.prop('disabled', false).text('Pridať knihu');
-                    }
-                },
-                error: function() {
-                    $message.html('<div class="kk-error-message">Nastala chyba. Skúste to prosím znova.</div>');
-                    $submitBtn.prop('disabled', false).text('Pridať knihu');
-                }
-            });
         });
 
         // === NÁHĽAD OBRÁZKA ===

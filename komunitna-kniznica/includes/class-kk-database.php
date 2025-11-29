@@ -44,12 +44,15 @@ class KK_Database {
         $table_name = self::get_table_name($table);
 
         if (empty($table_name)) {
+            error_log('KK Database Error: Invalid table name - ' . $table);
             return false;
         }
 
         $result = $wpdb->insert($table_name, $data, $format);
 
         if ($result === false) {
+            error_log('KK Database Error: Insert failed - ' . $wpdb->last_error);
+            error_log('KK Database Error: Last query - ' . $wpdb->last_query);
             return false;
         }
 
