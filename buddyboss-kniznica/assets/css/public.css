@@ -1,0 +1,781 @@
+/**
+ * BuddyBoss Komunitná Knižnica - Public CSS
+ * Farebná schéma: Zlatá (#d4af37) + Tmavá (#0f1419, #1a2332)
+ */
+
+:root {
+    --gold: #d4af37;
+    --gold-dark: #c9a22e;
+    --gold-ink: #6b5700;
+    --ink: #eee;
+    --bg-1: #0f1419;
+    --bg-2: #1a2332;
+    --panel: rgba(26, 35, 50, 0.9);
+    --success: #4CAF50;
+    --error: #f44336;
+    --warning: #ff9800;
+    --info: #2196F3;
+}
+
+/* ===== ZÁKLADNÉ ŠTÝLY ===== */
+.bbk-catalog-wrapper,
+.bbk-dashboard-wrapper,
+.bbk-book-detail-wrapper,
+.bbk-add-book-wrapper,
+.bbk-my-books-wrapper {
+    background-color: var(--bg-1);
+    color: var(--ink);
+    padding: 40px;
+    border-radius: 12px;
+    margin: 30px 0;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--gold);
+}
+
+/* ===== TLAČIDLÁ ===== */
+.bbk-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    text-align: center;
+}
+
+.bbk-btn-primary {
+    background-color: var(--gold);
+    color: var(--gold-ink);
+}
+
+.bbk-btn-primary:hover {
+    background-color: var(--gold-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+.bbk-btn-secondary {
+    background-color: var(--bg-2);
+    color: var(--ink);
+    border: 2px solid var(--gold);
+}
+
+.bbk-btn-secondary:hover {
+    background-color: var(--gold);
+    color: var(--gold-ink);
+}
+
+.bbk-btn-small {
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.bbk-btn-large {
+    padding: 16px 32px;
+    font-size: 18px;
+}
+
+.bbk-btn-block {
+    display: block;
+    width: 100%;
+}
+
+/* ===== FORMULÁRE ===== */
+.bbk-input,
+.bbk-select,
+.bbk-textarea {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--bg-2);
+    color: var(--ink);
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.bbk-input:focus,
+.bbk-select:focus,
+.bbk-textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.bbk-form-group {
+    margin-bottom: 24px;
+}
+
+.bbk-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--gold);
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.bbk-form-group small {
+    display: block;
+    margin-top: 6px;
+    color: var(--ink);
+    opacity: 0.7;
+    font-size: 13px;
+}
+
+.bbk-form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.bbk-form-section {
+    background: var(--panel);
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border-left: 4px solid var(--gold);
+}
+
+.bbk-form-section h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.bbk-form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+/* ===== KATALÓG KNÍH ===== */
+.bbk-catalog-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.bbk-catalog-header h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.bbk-catalog-header p {
+    font-size: 18px;
+    opacity: 0.8;
+}
+
+.bbk-catalog-filters {
+    background-color: var(--panel);
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 40px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.bbk-filter-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 15px;
+    align-items: end;
+}
+
+@media (max-width: 992px) {
+    .bbk-filter-form {
+        grid-template-columns: 1fr;
+    }
+}
+
+.bbk-books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.bbk-book-card {
+    background-color: var(--panel);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.bbk-book-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+    border-color: var(--gold);
+}
+
+.bbk-book-image {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+    background: var(--bg-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bbk-book-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.bbk-book-placeholder {
+    font-size: 80px;
+    opacity: 0.3;
+}
+
+.bbk-book-placeholder-large {
+    font-size: 150px;
+    opacity: 0.3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+}
+
+.bbk-book-info {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.bbk-book-title {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+}
+
+.bbk-book-title a {
+    color: var(--gold);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.bbk-book-title a:hover {
+    color: var(--gold-dark);
+}
+
+.bbk-book-author,
+.bbk-book-genre {
+    margin: 5px 0;
+    opacity: 0.9;
+}
+
+.bbk-book-rating {
+    margin: 10px 0;
+}
+
+.bbk-stars {
+    font-size: 16px;
+}
+
+.bbk-rating-text {
+    margin-left: 8px;
+    opacity: 0.8;
+    font-size: 14px;
+}
+
+.bbk-book-meta {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+    padding: 10px 0;
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.bbk-book-price {
+    font-weight: bold;
+    color: var(--gold);
+}
+
+.bbk-book-owner {
+    margin: 10px 0;
+    opacity: 0.8;
+    font-size: 14px;
+}
+
+/* ===== DASHBOARD ===== */
+.bbk-dashboard-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.bbk-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.bbk-stat-card {
+    background: var(--panel);
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    transition: all 0.3s ease;
+}
+
+.bbk-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+    border-color: var(--gold);
+}
+
+.bbk-stat-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.bbk-stat-value {
+    font-size: 42px;
+    font-weight: bold;
+    color: var(--gold);
+    margin: 10px 0;
+}
+
+.bbk-stat-label {
+    opacity: 0.8;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.bbk-stat-earnings {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+}
+
+.bbk-dashboard-section {
+    background: var(--panel);
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    border-left: 4px solid var(--gold);
+}
+
+.bbk-dashboard-section h3 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 24px;
+}
+
+.bbk-books-list,
+.bbk-lendings-list {
+    display: grid;
+    gap: 20px;
+}
+
+.bbk-book-item,
+.bbk-lending-item {
+    background: var(--bg-1);
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    gap: 20px;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    transition: all 0.3s ease;
+}
+
+.bbk-book-item:hover,
+.bbk-lending-item:hover {
+    border-color: var(--gold);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+}
+
+.bbk-book-item-image {
+    width: 80px;
+    height: 120px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.bbk-book-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.bbk-book-item-info {
+    flex: 1;
+}
+
+.bbk-book-item-info h4 {
+    margin: 0 0 8px 0;
+    color: var(--gold);
+}
+
+.bbk-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-right: 10px;
+}
+
+.bbk-status-available {
+    background-color: var(--success);
+    color: white;
+}
+
+.bbk-status-reserved {
+    background-color: var(--warning);
+    color: white;
+}
+
+.bbk-status-borrowed {
+    background-color: var(--info);
+    color: white;
+}
+
+.bbk-lending-info h4 {
+    margin: 0 0 10px 0;
+    color: var(--gold);
+}
+
+.bbk-commission {
+    color: var(--gold);
+    margin-top: 10px;
+}
+
+.bbk-shipping-info {
+    background: rgba(212, 175, 55, 0.1);
+    padding: 15px;
+    border-radius: 6px;
+    border: 2px solid var(--gold);
+    margin-top: 15px;
+}
+
+.bbk-shipping-info h5 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--gold);
+}
+
+.bbk-shipping-info p {
+    margin: 4px 0;
+}
+
+.bbk-days-left {
+    font-weight: bold;
+}
+
+.bbk-days-left.bbk-urgent {
+    color: var(--error);
+}
+
+/* ===== DETAIL KNIHY ===== */
+.bbk-book-detail-header {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 992px) {
+    .bbk-book-detail-header {
+        grid-template-columns: 1fr;
+    }
+}
+
+.bbk-book-detail-image {
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: var(--bg-2);
+}
+
+.bbk-book-detail-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.bbk-book-detail-info h1 {
+    font-size: 36px;
+    margin: 0 0 20px 0;
+}
+
+.bbk-author,
+.bbk-genre,
+.bbk-isbn {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.bbk-meta-row {
+    display: flex;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.bbk-rating-summary {
+    background: var(--panel);
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.bbk-stars-large {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.bbk-price-box {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
+    border: 2px solid var(--gold);
+    padding: 25px;
+    border-radius: 12px;
+    margin: 30px 0;
+}
+
+.bbk-price-label {
+    display: block;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    opacity: 0.8;
+}
+
+.bbk-price-value {
+    display: block;
+    font-size: 36px;
+    font-weight: bold;
+    color: var(--gold);
+    margin-bottom: 8px;
+}
+
+.bbk-commission-info {
+    display: block;
+    opacity: 0.7;
+    font-size: 14px;
+}
+
+.bbk-actions {
+    margin: 30px 0;
+}
+
+.bbk-book-description {
+    background: var(--panel);
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    border-left: 4px solid var(--gold);
+}
+
+.bbk-ratings-section {
+    background: var(--panel);
+    padding: 30px;
+    border-radius: 12px;
+    border-left: 4px solid var(--gold);
+}
+
+.bbk-ratings-list {
+    display: grid;
+    gap: 20px;
+}
+
+.bbk-rating-item {
+    background: var(--bg-1);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.bbk-rating-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.bbk-rating-author {
+    font-weight: bold;
+    color: var(--gold);
+}
+
+.bbk-rating-date {
+    opacity: 0.6;
+    font-size: 14px;
+}
+
+.bbk-rating-review {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+/* ===== NOTIFIKÁCIE ===== */
+.bbk-login-notice,
+.bbk-owner-notice,
+.bbk-unavailable-notice {
+    padding: 15px;
+    border-radius: 6px;
+    margin: 20px 0;
+}
+
+.bbk-login-notice {
+    background: rgba(33, 150, 243, 0.2);
+    border-left: 4px solid var(--info);
+}
+
+.bbk-owner-notice {
+    background: rgba(76, 175, 80, 0.2);
+    border-left: 4px solid var(--success);
+}
+
+.bbk-unavailable-notice {
+    background: rgba(244, 67, 54, 0.2);
+    border-left: 4px solid var(--error);
+}
+
+/* ===== SUCCESS/ERROR MESSAGES ===== */
+.bbk-success,
+.bbk-error {
+    padding: 15px 20px;
+    border-radius: 6px;
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+.bbk-success {
+    background-color: rgba(76, 175, 80, 0.2);
+    color: var(--success);
+    border-left: 4px solid var(--success);
+}
+
+.bbk-error {
+    background-color: rgba(244, 67, 54, 0.2);
+    color: var(--error);
+    border-left: 4px solid var(--error);
+}
+
+/* ===== RANGE SLIDER ===== */
+.bbk-range {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--bg-2);
+    outline: none;
+}
+
+.bbk-range::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+}
+
+.bbk-range::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+}
+
+/* ===== MY BOOKS ===== */
+.bbk-my-books-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.bbk-my-books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.bbk-my-book-card {
+    position: relative;
+}
+
+.bbk-status-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 10;
+}
+
+.bbk-my-book-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.bbk-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.bbk-empty-state p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    opacity: 0.7;
+}
+
+/* ===== IMAGE PREVIEW ===== */
+.bbk-image-preview {
+    margin-top: 15px;
+}
+
+.bbk-image-preview img {
+    max-width: 200px;
+    border-radius: 8px;
+    border: 2px solid var(--gold);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .bbk-catalog-wrapper,
+    .bbk-dashboard-wrapper,
+    .bbk-book-detail-wrapper,
+    .bbk-add-book-wrapper,
+    .bbk-my-books-wrapper {
+        padding: 20px;
+    }
+
+    .bbk-books-grid,
+    .bbk-my-books-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bbk-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bbk-form-actions {
+        flex-direction: column;
+    }
+
+    .bbk-my-books-header {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
