@@ -33,6 +33,16 @@ class BBK_Database {
         global $wpdb;
         $table_name = self::get_table_name($table);
 
+        // Automaticky pridaj created_at ak nie je nastavené
+        if (!isset($data['created_at'])) {
+            $data['created_at'] = current_time('mysql');
+        }
+
+        // Automaticky pridaj updated_at pre tabuľku books
+        if ($table === 'books' && !isset($data['updated_at'])) {
+            $data['updated_at'] = current_time('mysql');
+        }
+
         $wpdb->insert($table_name, $data);
 
         return $wpdb->insert_id;
@@ -44,6 +54,11 @@ class BBK_Database {
     public static function update($table, $data, $where) {
         global $wpdb;
         $table_name = self::get_table_name($table);
+
+        // Automaticky aktualizuj updated_at pre tabuľku books
+        if ($table === 'books' && !isset($data['updated_at'])) {
+            $data['updated_at'] = current_time('mysql');
+        }
 
         return $wpdb->update($table_name, $data, $where);
     }

@@ -3,7 +3,7 @@
  * Plugin Name: BuddyBoss Komunitná Knižnica
  * Plugin URI: https://potrebnymuz.sk
  * Description: Komunitná knižnica pre BuddyBoss s WooCommerce integráciou - zdieľanie kníh medzi členmi komunity Bratstva Potrebných Mužov
- * Version: 1.0.4
+ * Version: 1.0.5
  * Author: Bratstvo Potrebných Mužov
  * Author URI: https://potrebnymuz.sk
  * Text Domain: buddyboss-kniznica
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Definovanie konštánt
-define('BBK_VERSION', '1.0.4');
+define('BBK_VERSION', '1.0.5');
 define('BBK_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('BBK_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('BBK_PLUGIN_BASENAME', plugin_basename(__FILE__));
