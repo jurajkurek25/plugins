@@ -75,8 +75,8 @@ class BBK_Shortcodes {
             return '<p>' . __('Musíte byť prihlásený.', 'buddyboss-kniznica') . '</p>';
         }
 
-        // Kontrola aktívneho členstva
-        if (!BBK_BuddyBoss::get_instance()->is_active_member()) {
+        // Kontrola aktívneho členstva (len ak je BuddyBoss dostupný)
+        if (class_exists('BBK_BuddyBoss') && !BBK_BuddyBoss::get_instance()->is_active_member()) {
             return '<p>' . __('Prístup len pre aktívnych členov komunity potrebnymuz.sk.', 'buddyboss-kniznica') . '</p>';
         }
 

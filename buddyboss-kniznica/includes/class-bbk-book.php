@@ -34,8 +34,8 @@ class BBK_Book {
             return new WP_Error('not_logged_in', __('Musíte byť prihlásený.', 'buddyboss-kniznica'));
         }
 
-        // Kontrola aktívneho členstva
-        if (!BBK_BuddyBoss::get_instance()->is_active_member()) {
+        // Kontrola aktívneho členstva (len ak je BuddyBoss dostupný)
+        if (class_exists('BBK_BuddyBoss') && !BBK_BuddyBoss::get_instance()->is_active_member()) {
             return new WP_Error('not_active_member', __('Prístup len pre aktívnych členov komunity.', 'buddyboss-kniznica'));
         }
 

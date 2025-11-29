@@ -57,15 +57,25 @@ class BuddyBoss_Kniznica {
      * Načítanie závislostí
      */
     private function load_dependencies() {
-        // Core triedy
+        // Základné triedy - vždy potrebné
         require_once BBK_PLUGIN_DIR . 'includes/class-bbk-install.php';
         require_once BBK_PLUGIN_DIR . 'includes/class-bbk-database.php';
-        require_once BBK_PLUGIN_DIR . 'includes/class-bbk-buddyboss.php';
+
+        // BuddyBoss trieda - len ak je BuddyBoss dostupný
+        if (function_exists('buddypress') || class_exists('BuddyBoss_Platform')) {
+            require_once BBK_PLUGIN_DIR . 'includes/class-bbk-buddyboss.php';
+        }
+
+        // Hlavné triedy
         require_once BBK_PLUGIN_DIR . 'includes/class-bbk-book.php';
         require_once BBK_PLUGIN_DIR . 'includes/class-bbk-lending.php';
         require_once BBK_PLUGIN_DIR . 'includes/class-bbk-rating.php';
-        require_once BBK_PLUGIN_DIR . 'includes/class-bbk-woocommerce.php';
         require_once BBK_PLUGIN_DIR . 'includes/class-bbk-notifications.php';
+
+        // WooCommerce trieda - len ak je WooCommerce dostupný
+        if (class_exists('WooCommerce')) {
+            require_once BBK_PLUGIN_DIR . 'includes/class-bbk-woocommerce.php';
+        }
 
         // Admin triedy
         if (is_admin()) {
