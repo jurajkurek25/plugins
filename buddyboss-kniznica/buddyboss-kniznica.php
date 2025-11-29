@@ -3,7 +3,7 @@
  * Plugin Name: BuddyBoss Komunitná Knižnica
  * Plugin URI: https://potrebnymuz.sk
  * Description: Komunitná knižnica pre BuddyBoss s WooCommerce integráciou - zdieľanie kníh medzi členmi komunity Bratstva Potrebných Mužov
- * Version: 1.0.0
+ * Version: 1.0.3
  * Author: Bratstvo Potrebných Mužov
  * Author URI: https://potrebnymuz.sk
  * Text Domain: buddyboss-kniznica
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Definovanie konštánt
-define('BBK_VERSION', '1.0.0');
+define('BBK_VERSION', '1.0.3');
 define('BBK_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('BBK_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('BBK_PLUGIN_BASENAME', plugin_basename(__FILE__));
@@ -49,14 +49,40 @@ class BuddyBoss_Kniznica {
      * Konštruktor
      */
     private function __construct() {
-        $this->load_dependencies();
-        $this->init_hooks();
+        // Aktivácia a deaktivácia - musia byť pred plugins_loaded
+        register_activation_hook(__FILE__, array($this, 'activate_plugin'));
+        register_deactivation_hook(__FILE__, array($this, 'deactivate_plugin'));
+
+        // Načítať závislosti až keď sú všetky pluginy načítané
+        add_action('plugins_loaded', array($this, 'load_dependencies'), 5);
+
+        // Kontrola závislostí
+        add_action('admin_init', array($this, 'check_dependencies'));
+
+        // Načítanie textov
+        add_action('init', array($this, 'load_textdomain'));
     }
 
     /**
-     * Načítanie závislostí
+     * Aktivácia pluginu
      */
-    private function load_dependencies() {
+    public function activate_plugin() {
+        require_once BBK_PLUGIN_DIR . 'includes/class-bbk-install.php';
+        BBK_Install::activate();
+    }
+
+    /**
+     * Deaktivácia pluginu
+     */
+    public function deactivate_plugin() {
+        require_once BBK_PLUGIN_DIR . 'includes/class-bbk-install.php';
+        BBK_Install::deactivate();
+    }
+
+    /**
+     * Načítanie závislostí - VOLÁ SA AŽ KEĎ SÚ VŠETKY PLUGINY NAČÍTANÉ
+     */
+    public function load_dependencies() {
         // Základné triedy - vždy potrebné
         require_once BBK_PLUGIN_DIR . 'includes/class-bbk-install.php';
         require_once BBK_PLUGIN_DIR . 'includes/class-bbk-database.php';
@@ -85,24 +111,9 @@ class BuddyBoss_Kniznica {
         // Public triedy
         require_once BBK_PLUGIN_DIR . 'public/class-bbk-public.php';
         require_once BBK_PLUGIN_DIR . 'public/class-bbk-shortcodes.php';
-    }
 
-    /**
-     * Inicializácia hooks
-     */
-    private function init_hooks() {
-        // Aktivácia a deaktivácia
-        register_activation_hook(__FILE__, array('BBK_Install', 'activate'));
-        register_deactivation_hook(__FILE__, array('BBK_Install', 'deactivate'));
-
-        // Kontrola závislostí
-        add_action('admin_init', array($this, 'check_dependencies'));
-
-        // Inicializácia pluginu
-        add_action('plugins_loaded', array($this, 'init'));
-
-        // Načítanie textov
-        add_action('init', array($this, 'load_textdomain'));
+        // Inicializácia tried
+        $this->init();
     }
 
     /**
