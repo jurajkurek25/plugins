@@ -240,10 +240,34 @@ class KK_Book {
             wp_send_json_error(array('message' => __('Musíte byť prihlásený.', 'komunitna-kniznica')));
         }
 
+        // Diagnostika - skontroluj či tabuľka existuje
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'kk_books';
+        $table_exists = $wpdb->get_var("SHOW TABLES LIKE '$table_name'") === $table_name;
+
+        if (!$table_exists) {
+            wp_send_json_error(array(
+                'message' => sprintf(__('CHYBA: Tabuľka "%s" neexistuje! Deaktivujte a znovu aktivujte plugin.', 'komunitna-kniznica'), $table_name),
+                'debug' => array(
+                    'table_name' => $table_name,
+                    'table_exists' => false,
+                    'wpdb_prefix' => $wpdb->prefix
+                )
+            ));
+        }
+
         $result = $this->add_book($_POST);
 
         if (is_wp_error($result)) {
-            wp_send_json_error(array('message' => $result->get_error_message()));
+            // Vráť podrobnejšie chyby pre debugging
+            wp_send_json_error(array(
+                'message' => $result->get_error_message(),
+                'debug' => array(
+                    'error_code' => $result->get_error_code(),
+                    'wpdb_last_error' => $wpdb->last_error,
+                    'wpdb_last_query' => $wpdb->last_query
+                )
+            ));
         }
 
         wp_send_json_success(array(

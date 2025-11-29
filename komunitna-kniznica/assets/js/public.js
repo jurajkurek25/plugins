@@ -156,6 +156,7 @@
                     data: formDataObj,
                     success: function(response) {
                         if (response.success) {
+                            console.log('SUCCESS:', response);
                             $message.html('<div class="kk-success-message" style="background: #4ade80; color: #0f1419; padding: 15px; border-radius: 5px; margin: 15px 0;">' + response.data.message + '</div>');
                             $form[0].reset();
                             $('#kk-image-preview').html('');
@@ -163,6 +164,10 @@
                                 location.reload();
                             }, 2000);
                         } else {
+                            console.error('ERROR:', response);
+                            if (response.data.debug) {
+                                console.error('DEBUG INFO:', response.data.debug);
+                            }
                             $message.html('<div class="kk-error-message" style="background: #f87171; color: #fff; padding: 15px; border-radius: 5px; margin: 15px 0;">' + response.data.message + '</div>');
                             $submitBtn.prop('disabled', false).text('Pridať knihu');
                         }
