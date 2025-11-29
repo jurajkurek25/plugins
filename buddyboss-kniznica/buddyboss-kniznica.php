@@ -3,7 +3,7 @@
  * Plugin Name: BuddyBoss Komunitná Knižnica
  * Plugin URI: https://potrebnymuz.sk
  * Description: Komunitná knižnica pre BuddyBoss s WooCommerce integráciou - zdieľanie kníh medzi členmi komunity Bratstva Potrebných Mužov
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: Bratstvo Potrebných Mužov
  * Author URI: https://potrebnymuz.sk
  * Text Domain: buddyboss-kniznica
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Definovanie konštánt
-define('BBK_VERSION', '1.0.3');
+define('BBK_VERSION', '1.0.4');
 define('BBK_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('BBK_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('BBK_PLUGIN_BASENAME', plugin_basename(__FILE__));
@@ -49,10 +49,6 @@ class BuddyBoss_Kniznica {
      * Konštruktor
      */
     private function __construct() {
-        // Aktivácia a deaktivácia - musia byť pred plugins_loaded
-        register_activation_hook(__FILE__, array($this, 'activate_plugin'));
-        register_deactivation_hook(__FILE__, array($this, 'deactivate_plugin'));
-
         // Načítať závislosti až keď sú všetky pluginy načítané
         add_action('plugins_loaded', array($this, 'load_dependencies'), 5);
 
@@ -61,22 +57,40 @@ class BuddyBoss_Kniznica {
 
         // Načítanie textov
         add_action('init', array($this, 'load_textdomain'));
+
+        // Vytvorenie WooCommerce produktu až po načítaní všetkých pluginov
+        add_action('plugins_loaded', array($this, 'ensure_dummy_product'), 20);
     }
 
     /**
-     * Aktivácia pluginu
+     * Zabezpečenie, že dummy produkt existuje (len ak je WooCommerce dostupné)
      */
-    public function activate_plugin() {
-        require_once BBK_PLUGIN_DIR . 'includes/class-bbk-install.php';
-        BBK_Install::activate();
-    }
+    public function ensure_dummy_product() {
+        if (!class_exists('WooCommerce')) {
+            return;
+        }
 
-    /**
-     * Deaktivácia pluginu
-     */
-    public function deactivate_plugin() {
-        require_once BBK_PLUGIN_DIR . 'includes/class-bbk-install.php';
-        BBK_Install::deactivate();
+        $existing_product_id = get_option('bbk_dummy_product_id');
+        if ($existing_product_id && get_post($existing_product_id)) {
+            return;
+        }
+
+        // Vytvorenie FYZICKÉHO produktu (pre získanie doručovacích údajov)
+        $product = new WC_Product_Simple();
+        $product->set_name(__('Požičanie knihy - Komunitná Knižnica', 'buddyboss-kniznica'));
+        $product->set_status('private');
+        $product->set_catalog_visibility('hidden');
+        $product->set_price(0);
+        $product->set_regular_price(0);
+        $product->set_virtual(false);
+        $product->set_downloadable(false);
+        $product->set_weight('0.5');
+        $product->set_length('20');
+        $product->set_width('15');
+        $product->set_height('3');
+
+        $product_id = $product->save();
+        update_option('bbk_dummy_product_id', $product_id);
     }
 
     /**
@@ -146,8 +160,8 @@ class BuddyBoss_Kniznica {
         // Inicializácia tried
         BBK_Database::get_instance();
 
-        // BuddyBoss integrácia (len ak je dostupný)
-        if (function_exists('buddypress') || class_exists('BuddyBoss_Platform')) {
+        // BuddyBoss integrácia (len ak bola načítaná trieda)
+        if (class_exists('BBK_BuddyBoss')) {
             BBK_BuddyBoss::get_instance();
         }
 
@@ -155,8 +169,8 @@ class BuddyBoss_Kniznica {
         BBK_Lending::get_instance();
         BBK_Rating::get_instance();
 
-        // WooCommerce integrácia (len ak je dostupný)
-        if (class_exists('WooCommerce')) {
+        // WooCommerce integrácia (len ak bola načítaná trieda)
+        if (class_exists('BBK_WooCommerce')) {
             BBK_WooCommerce::get_instance();
         }
 
@@ -180,6 +194,24 @@ class BuddyBoss_Kniznica {
         );
     }
 }
+
+/**
+ * Aktivácia pluginu
+ */
+function bbk_activate_plugin() {
+    require_once BBK_PLUGIN_DIR . 'includes/class-bbk-install.php';
+    BBK_Install::activate();
+}
+register_activation_hook(__FILE__, 'bbk_activate_plugin');
+
+/**
+ * Deaktivácia pluginu
+ */
+function bbk_deactivate_plugin() {
+    require_once BBK_PLUGIN_DIR . 'includes/class-bbk-install.php';
+    BBK_Install::deactivate();
+}
+register_deactivation_hook(__FILE__, 'bbk_deactivate_plugin');
 
 /**
  * Spustenie pluginu
