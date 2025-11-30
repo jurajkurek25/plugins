@@ -13,15 +13,24 @@ class BBK_Install {
      * Aktivácia pluginu
      */
     public static function activate() {
-        self::create_tables();
-        self::set_default_options();
-        self::setup_cron();
-        self::create_capabilities();
+        try {
+            self::create_tables();
+            self::set_default_options();
+            self::setup_cron();
+            self::create_capabilities();
 
-        // POZNÁMKA: Dummy WooCommerce produkt sa vytvorí až pri plugins_loaded hooku
-        // cez metódu ensure_dummy_product(), nie tu pri aktivácii
+            // POZNÁMKA: Dummy WooCommerce produkt sa vytvorí až pri plugins_loaded hooku
+            // cez metódu ensure_dummy_product(), nie tu pri aktivácii
 
-        flush_rewrite_rules();
+            // flush_rewrite_rules môže spôsobiť problémy pri aktivácii
+            // Namiesto toho nastavíme flag a urobíme flush pri ďalšom načítaní
+            update_option('bbk_flush_rewrite_rules', 1);
+
+        } catch (Exception $e) {
+            // Log error
+            error_log('BBK Activation Error: ' . $e->getMessage());
+            wp_die('BBK Plugin activation failed: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -36,93 +45,99 @@ class BBK_Install {
      */
     private static function create_tables() {
         global $wpdb;
+
         $charset_collate = $wpdb->get_charset_collate();
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-
         // Tabuľka kníh
-        $sql_books = "CREATE TABLE {$wpdb->prefix}bbk_books (
-            id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-            user_id bigint(20) unsigned NOT NULL,
-            title varchar(255) NOT NULL,
-            author varchar(255) NOT NULL,
-            isbn varchar(20) DEFAULT NULL,
-            genre varchar(100) NOT NULL,
-            description text,
-            book_condition tinyint(2) NOT NULL DEFAULT 5,
-            image_url varchar(500) DEFAULT NULL,
-            lending_price decimal(10,2) NOT NULL DEFAULT 0.00,
-            status varchar(20) NOT NULL DEFAULT 'available',
-            created_at datetime NOT NULL,
-            updated_at datetime NOT NULL,
-            PRIMARY KEY  (id),
-            KEY user_id (user_id),
-            KEY status (status),
-            KEY genre (genre)
-        ) $charset_collate;";
+        $table_books = $wpdb->prefix . 'bbk_books';
+        if ($wpdb->get_var("SHOW TABLES LIKE '{$table_books}'") != $table_books) {
+            $wpdb->query("CREATE TABLE {$table_books} (
+                id bigint(20) NOT NULL AUTO_INCREMENT,
+                user_id bigint(20) NOT NULL,
+                title varchar(255) NOT NULL,
+                author varchar(255) NOT NULL,
+                isbn varchar(20) DEFAULT NULL,
+                genre varchar(100) NOT NULL,
+                description text,
+                book_condition tinyint(2) NOT NULL DEFAULT 5,
+                image_url varchar(500) DEFAULT NULL,
+                lending_price decimal(10,2) NOT NULL DEFAULT 0.00,
+                status varchar(20) NOT NULL DEFAULT 'available',
+                created_at datetime NOT NULL,
+                updated_at datetime NOT NULL,
+                PRIMARY KEY (id),
+                KEY user_id (user_id),
+                KEY status (status),
+                KEY genre (genre)
+            ) {$charset_collate}");
+        }
 
         // Tabuľka požičaní
-        $sql_lendings = "CREATE TABLE {$wpdb->prefix}bbk_lendings (
-            id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-            book_id bigint(20) unsigned NOT NULL,
-            borrower_id bigint(20) unsigned NOT NULL,
-            lender_id bigint(20) unsigned NOT NULL,
-            order_id bigint(20) unsigned DEFAULT NULL,
-            lending_price decimal(10,2) NOT NULL DEFAULT 0.00,
-            owner_commission decimal(10,2) NOT NULL DEFAULT 0.00,
-            community_commission decimal(10,2) NOT NULL DEFAULT 0.00,
-            start_date datetime NOT NULL,
-            due_date datetime NOT NULL,
-            return_date datetime DEFAULT NULL,
-            status varchar(20) NOT NULL DEFAULT 'active',
-            shipping_name varchar(255) DEFAULT NULL,
-            shipping_address varchar(255) DEFAULT NULL,
-            shipping_city varchar(100) DEFAULT NULL,
-            shipping_postcode varchar(20) DEFAULT NULL,
-            shipping_country varchar(50) DEFAULT NULL,
-            shipping_phone varchar(50) DEFAULT NULL,
-            created_at datetime NOT NULL,
-            PRIMARY KEY  (id),
-            KEY book_id (book_id),
-            KEY borrower_id (borrower_id),
-            KEY lender_id (lender_id),
-            KEY status (status)
-        ) $charset_collate;";
+        $table_lendings = $wpdb->prefix . 'bbk_lendings';
+        if ($wpdb->get_var("SHOW TABLES LIKE '{$table_lendings}'") != $table_lendings) {
+            $wpdb->query("CREATE TABLE {$table_lendings} (
+                id bigint(20) NOT NULL AUTO_INCREMENT,
+                book_id bigint(20) NOT NULL,
+                borrower_id bigint(20) NOT NULL,
+                lender_id bigint(20) NOT NULL,
+                order_id bigint(20) DEFAULT NULL,
+                lending_price decimal(10,2) NOT NULL DEFAULT 0.00,
+                owner_commission decimal(10,2) NOT NULL DEFAULT 0.00,
+                community_commission decimal(10,2) NOT NULL DEFAULT 0.00,
+                start_date datetime NOT NULL,
+                due_date datetime NOT NULL,
+                return_date datetime DEFAULT NULL,
+                status varchar(20) NOT NULL DEFAULT 'active',
+                shipping_name varchar(255) DEFAULT NULL,
+                shipping_address varchar(255) DEFAULT NULL,
+                shipping_city varchar(100) DEFAULT NULL,
+                shipping_postcode varchar(20) DEFAULT NULL,
+                shipping_country varchar(50) DEFAULT NULL,
+                shipping_phone varchar(50) DEFAULT NULL,
+                created_at datetime NOT NULL,
+                PRIMARY KEY (id),
+                KEY book_id (book_id),
+                KEY borrower_id (borrower_id),
+                KEY lender_id (lender_id),
+                KEY status (status)
+            ) {$charset_collate}");
+        }
 
         // Tabuľka hodnotení
-        $sql_ratings = "CREATE TABLE {$wpdb->prefix}bbk_ratings (
-            id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-            book_id bigint(20) unsigned NOT NULL,
-            user_id bigint(20) unsigned NOT NULL,
-            lending_id bigint(20) unsigned NOT NULL,
-            rating tinyint(1) NOT NULL,
-            review text,
-            created_at datetime NOT NULL,
-            PRIMARY KEY  (id),
-            KEY book_id (book_id),
-            KEY user_id (user_id),
-            UNIQUE KEY unique_rating (lending_id)
-        ) $charset_collate;";
+        $table_ratings = $wpdb->prefix . 'bbk_ratings';
+        if ($wpdb->get_var("SHOW TABLES LIKE '{$table_ratings}'") != $table_ratings) {
+            $wpdb->query("CREATE TABLE {$table_ratings} (
+                id bigint(20) NOT NULL AUTO_INCREMENT,
+                book_id bigint(20) NOT NULL,
+                user_id bigint(20) NOT NULL,
+                lending_id bigint(20) NOT NULL,
+                rating tinyint(1) NOT NULL,
+                review text,
+                created_at datetime NOT NULL,
+                PRIMARY KEY (id),
+                KEY book_id (book_id),
+                KEY user_id (user_id),
+                UNIQUE KEY unique_rating (lending_id)
+            ) {$charset_collate}");
+        }
 
         // Tabuľka notifikácií
-        $sql_notifications = "CREATE TABLE {$wpdb->prefix}bbk_notifications (
-            id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-            user_id bigint(20) unsigned NOT NULL,
-            type varchar(50) NOT NULL,
-            title varchar(255) NOT NULL,
-            message text NOT NULL,
-            link varchar(500) DEFAULT NULL,
-            is_read tinyint(1) NOT NULL DEFAULT 0,
-            created_at datetime NOT NULL,
-            PRIMARY KEY  (id),
-            KEY user_id (user_id),
-            KEY is_read (is_read)
-        ) $charset_collate;";
-
-        dbDelta($sql_books);
-        dbDelta($sql_lendings);
-        dbDelta($sql_ratings);
-        dbDelta($sql_notifications);
+        $table_notifications = $wpdb->prefix . 'bbk_notifications';
+        if ($wpdb->get_var("SHOW TABLES LIKE '{$table_notifications}'") != $table_notifications) {
+            $wpdb->query("CREATE TABLE {$table_notifications} (
+                id bigint(20) NOT NULL AUTO_INCREMENT,
+                user_id bigint(20) NOT NULL,
+                type varchar(50) NOT NULL,
+                title varchar(255) NOT NULL,
+                message text NOT NULL,
+                link varchar(500) DEFAULT NULL,
+                is_read tinyint(1) NOT NULL DEFAULT 0,
+                created_at datetime NOT NULL,
+                PRIMARY KEY (id),
+                KEY user_id (user_id),
+                KEY is_read (is_read)
+            ) {$charset_collate}");
+        }
     }
 
     /**
