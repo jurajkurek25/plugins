@@ -13,24 +13,22 @@ class BBK_Install {
      * Aktivácia pluginu
      */
     public static function activate() {
-        try {
-            self::create_tables();
-            self::set_default_options();
-            self::setup_cron();
-            self::create_capabilities();
+        // Ultra minimalistická aktivácia - len tabuľky
+        self::create_tables();
+        update_option('bbk_version', '1.0.6');
 
-            // POZNÁMKA: Dummy WooCommerce produkt sa vytvorí až pri plugins_loaded hooku
-            // cez metódu ensure_dummy_product(), nie tu pri aktivácii
+        // Ostatné nastavenia až po načítaní
+        update_option('bbk_needs_setup', 1);
+    }
 
-            // flush_rewrite_rules môže spôsobiť problémy pri aktivácii
-            // Namiesto toho nastavíme flag a urobíme flush pri ďalšom načítaní
-            update_option('bbk_flush_rewrite_rules', 1);
-
-        } catch (Exception $e) {
-            // Log error
-            error_log('BBK Activation Error: ' . $e->getMessage());
-            wp_die('BBK Plugin activation failed: ' . $e->getMessage());
-        }
+    /**
+     * Dokončenie nastavenia - volá sa pri prvom načítaní po aktivácii
+     */
+    public static function complete_setup() {
+        self::set_default_options();
+        self::setup_cron();
+        self::create_capabilities();
+        flush_rewrite_rules();
     }
 
     /**
@@ -38,6 +36,7 @@ class BBK_Install {
      */
     public static function deactivate() {
         self::remove_cron();
+        flush_rewrite_rules();
     }
 
     /**

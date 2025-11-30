@@ -3,7 +3,7 @@
  * Plugin Name: BuddyBoss Komunitná Knižnica
  * Plugin URI: https://potrebnymuz.sk
  * Description: Komunitná knižnica pre BuddyBoss s WooCommerce integráciou - zdieľanie kníh medzi členmi komunity Bratstva Potrebných Mužov
- * Version: 1.0.6
+ * Version: 1.0.7
  * Author: Bratstvo Potrebných Mužov
  * Author URI: https://potrebnymuz.sk
  * Text Domain: buddyboss-kniznica
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Definovanie konštánt
-define('BBK_VERSION', '1.0.6');
+define('BBK_VERSION', '1.0.7');
 define('BBK_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('BBK_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('BBK_PLUGIN_BASENAME', plugin_basename(__FILE__));
@@ -101,6 +101,12 @@ class BuddyBoss_Kniznica {
         require_once BBK_PLUGIN_DIR . 'includes/class-bbk-install.php';
         require_once BBK_PLUGIN_DIR . 'includes/class-bbk-database.php';
 
+        // Dokončiť setup ak je potrebné
+        if (get_option('bbk_needs_setup')) {
+            BBK_Install::complete_setup();
+            delete_option('bbk_needs_setup');
+        }
+
         // BuddyBoss trieda - len ak je BuddyBoss dostupný
         if (function_exists('buddypress') || class_exists('BuddyBoss_Platform')) {
             require_once BBK_PLUGIN_DIR . 'includes/class-bbk-buddyboss.php';
@@ -125,12 +131,6 @@ class BuddyBoss_Kniznica {
         // Public triedy
         require_once BBK_PLUGIN_DIR . 'public/class-bbk-public.php';
         require_once BBK_PLUGIN_DIR . 'public/class-bbk-shortcodes.php';
-
-        // Flush rewrite rules ak je potrebné
-        if (get_option('bbk_flush_rewrite_rules')) {
-            flush_rewrite_rules();
-            delete_option('bbk_flush_rewrite_rules');
-        }
 
         // Inicializácia tried
         $this->init();
