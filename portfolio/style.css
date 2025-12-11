@@ -263,6 +263,139 @@ body {
     font-size: 1.1rem;
 }
 
+/* Koučing - porovnávacie karty */
+.comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin: 40px 0;
+}
+
+.comparison-card {
+    background-color: var(--dark-gray);
+    padding: 30px;
+    border-left: 3px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.comparison-card:hover {
+    transform: translateY(-5px);
+    border-left-color: var(--white);
+}
+
+.comparison-card.highlight {
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+    border-left: 3px solid var(--white);
+}
+
+.comparison-card h3 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 15px;
+}
+
+.comparison-card p {
+    color: var(--gray);
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.comparison-detail {
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    font-size: 0.95rem;
+}
+
+.comparison-detail strong {
+    color: var(--white);
+}
+
+.key-message {
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+    padding: 30px;
+    margin: 40px 0;
+    border-left: 3px solid var(--white);
+}
+
+.key-message p {
+    color: var(--gray);
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+.key-message p:last-child {
+    margin-bottom: 0;
+}
+
+.key-message strong {
+    color: var(--white);
+    font-size: 1.1rem;
+}
+
+/* Koučing - autor work box */
+.author-work {
+    background-color: var(--dark-gray);
+    padding: 25px;
+    margin: 30px 0;
+    border-left: 3px solid var(--white);
+}
+
+.author-work p {
+    margin: 0;
+    line-height: 1.7;
+}
+
+/* Koučing - legacy box */
+.legacy-box {
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+    padding: 35px;
+    margin: 40px 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.legacy-box h3 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 20px;
+    color: var(--white);
+}
+
+.legacy-box p {
+    color: var(--gray);
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+.legacy-box em {
+    color: var(--white);
+    font-style: italic;
+}
+
+/* Koučing - final message */
+.final-message {
+    text-align: center;
+    padding: 40px;
+    margin: 50px 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.final-message p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: var(--gray);
+    margin-bottom: 20px;
+}
+
+.final-message strong {
+    color: var(--white);
+    font-size: 1.3rem;
+    display: block;
+    margin-top: 10px;
+}
+
 /* Produkty */
 .product-card {
     background-color: var(--dark-gray);
