@@ -1,0 +1,443 @@
+/* Reset a základné štýly */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --black: #000000;
+    --white: #ffffff;
+    --gray: #cccccc;
+    --dark-gray: #333333;
+    --light-gray: #f5f5f5;
+    --accent: #666666;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--black);
+    color: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Layout - Split screen */
+.left-section {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 35%;
+    height: 100vh;
+    background-color: var(--black);
+    overflow: hidden;
+}
+
+.right-section {
+    margin-left: 35%;
+    min-height: 100vh;
+    background-color: var(--black);
+    padding: 40px 60px;
+}
+
+/* Fotografia - placeholder */
+.photo-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.photo-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid var(--dark-gray);
+    filter: grayscale(100%);
+    /*
+    Nahraďte toto skutočnou fotografiou:
+    background-image: url('vasa-fotografia.jpg');
+    background-size: cover;
+    background-position: center;
+    clip-path: inset(0 50% 0 0); /* Zobrazí len ľavú polovicu */
+    */
+}
+
+.photo-placeholder p {
+    color: var(--gray);
+    text-align: center;
+    padding: 20px;
+}
+
+.photo-placeholder .small {
+    font-size: 0.9rem;
+    color: var(--accent);
+}
+
+/* Navigácia */
+.navigation {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 60px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--dark-gray);
+}
+
+.nav-link {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--white);
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -21px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--white);
+}
+
+/* Sekcie */
+.section {
+    margin-bottom: 80px;
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Typografia */
+.main-title {
+    font-size: 3.5rem;
+    font-weight: 300;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: var(--gray);
+    margin-bottom: 30px;
+    font-weight: 300;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 30px;
+    letter-spacing: -0.5px;
+}
+
+.intro p {
+    margin-bottom: 20px;
+    color: var(--gray);
+    font-size: 1.1rem;
+}
+
+/* Vízia */
+.vision-content p {
+    margin-bottom: 20px;
+    color: var(--gray);
+    line-height: 1.8;
+}
+
+.values {
+    background-color: var(--dark-gray);
+    padding: 30px;
+    margin: 30px 0;
+    border-left: 3px solid var(--white);
+}
+
+.values h3 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 20px;
+}
+
+.values ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.values li {
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.values li:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.mission {
+    font-size: 1.2rem;
+    font-weight: 400;
+    padding: 30px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+    border-left: 3px solid var(--white);
+    margin: 30px 0;
+}
+
+/* Produkty */
+.product-card {
+    background-color: var(--dark-gray);
+    padding: 40px;
+    margin-bottom: 30px;
+    border-left: 3px solid var(--white);
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    background-color: #3a3a3a;
+    transform: translateX(10px);
+}
+
+.product-card h3 {
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+
+.product-subtitle {
+    color: var(--gray);
+    font-size: 1rem;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.product-card > p {
+    color: var(--gray);
+    margin-bottom: 20px;
+    line-height: 1.7;
+}
+
+.product-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.feature {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.price {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 20px 0;
+}
+
+.old-price {
+    font-size: 1rem;
+    color: var(--accent);
+    text-decoration: line-through;
+    font-weight: 400;
+    margin-left: 10px;
+}
+
+.note {
+    color: var(--gray);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+/* Kontakt */
+.contact-content {
+    max-width: 600px;
+}
+
+.contact-intro {
+    font-size: 1.2rem;
+    color: var(--gray);
+    margin-bottom: 40px;
+}
+
+.contact-info {
+    margin-bottom: 40px;
+}
+
+.contact-item {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.contact-label {
+    font-weight: 600;
+    min-width: 80px;
+}
+
+.contact-link {
+    color: var(--white);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+.contact-link:hover {
+    border-bottom-color: var(--white);
+}
+
+.contact-note {
+    color: var(--accent);
+    font-style: italic;
+}
+
+/* Footer */
+.footer {
+    margin-top: 100px;
+    padding-top: 30px;
+    border-top: 1px solid var(--dark-gray);
+    text-align: center;
+    color: var(--accent);
+    font-size: 0.9rem;
+}
+
+/* Responzívny dizajn */
+@media (max-width: 1200px) {
+    .left-section {
+        width: 40%;
+    }
+
+    .right-section {
+        margin-left: 40%;
+        padding: 40px 40px;
+    }
+}
+
+@media (max-width: 968px) {
+    .left-section {
+        position: relative;
+        width: 100%;
+        height: 50vh;
+    }
+
+    .right-section {
+        margin-left: 0;
+        padding: 30px 20px;
+    }
+
+    .photo-placeholder {
+        border-right: none;
+        border-bottom: 1px solid var(--dark-gray);
+    }
+
+    .main-title {
+        font-size: 2.5rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .navigation {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .product-card {
+        padding: 25px;
+    }
+
+    .values ul {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-title {
+        font-size: 2rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .right-section {
+        padding: 20px 15px;
+    }
+
+    .product-card {
+        padding: 20px;
+    }
+
+    .navigation {
+        font-size: 0.85rem;
+    }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--black);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--dark-gray);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* Animácie pre sekcie pri scrollovaní */
+.section {
+    animation-delay: 0.2s;
+}
+
+.section:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.section:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.section:nth-child(4) {
+    animation-delay: 0.5s;
+}
