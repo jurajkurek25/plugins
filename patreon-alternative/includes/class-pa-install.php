@@ -25,6 +25,9 @@ class PA_Install {
         // Nastavenie default options
         self::set_default_options();
 
+        // Inštalácia témy
+        self::install_theme();
+
         // Flush rewrite rules
         flush_rewrite_rules();
 
@@ -176,5 +179,58 @@ class PA_Install {
                 add_option($key, $value);
             }
         }
+    }
+
+    /**
+     * Inštalácia Patreon Creator témy
+     */
+    private static function install_theme() {
+        $source = PA_PLUGIN_DIR . 'theme';
+        $destination = get_theme_root() . '/patreon-creator-theme';
+
+        // Skontrolovať či téma už neexistuje
+        if (file_exists($destination)) {
+            return; // Téma už je nainštalovaná
+        }
+
+        // Vytvoriť cieľový adresár
+        if (!file_exists($destination)) {
+            wp_mkdir_p($destination);
+        }
+
+        // Rekurzívne skopírovať súbory témy
+        self::recursive_copy($source, $destination);
+
+        // Log inštalácie
+        update_option('pa_theme_installed', true);
+        update_option('pa_theme_install_date', current_time('mysql'));
+    }
+
+    /**
+     * Rekurzívne kopírovanie adresára
+     */
+    private static function recursive_copy($source, $destination) {
+        if (!file_exists($source)) {
+            return false;
+        }
+
+        $dir = opendir($source);
+
+        while (false !== ($file = readdir($dir))) {
+            if (($file != '.') && ($file != '..')) {
+                $src = $source . '/' . $file;
+                $dst = $destination . '/' . $file;
+
+                if (is_dir($src)) {
+                    wp_mkdir_p($dst);
+                    self::recursive_copy($src, $dst);
+                } else {
+                    copy($src, $dst);
+                }
+            }
+        }
+
+        closedir($dir);
+        return true;
     }
 }
