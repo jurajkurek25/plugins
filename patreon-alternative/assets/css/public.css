@@ -1,0 +1,420 @@
+/* Public Styles for Patreon Alternative */
+
+/* Creator Profile */
+.pa-creator-profile {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.pa-profile-header {
+    margin-bottom: 40px;
+}
+
+.pa-profile-cover {
+    height: 300px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+}
+
+.pa-profile-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pa-profile-info {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    padding: 30px;
+    background: #fff;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin-top: -80px;
+    position: relative;
+}
+
+.pa-profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.pa-profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pa-profile-text h1 {
+    margin: 0 0 10px;
+    font-size: 36px;
+    color: #2c3e50;
+}
+
+.pa-tagline {
+    color: #666;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.pa-profile-stats {
+    display: flex;
+    gap: 30px;
+    color: #666;
+}
+
+.pa-profile-stats strong {
+    color: #2c3e50;
+    font-size: 20px;
+}
+
+.pa-profile-content {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.pa-profile-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pa-membership-cta,
+.pa-tiers-preview {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.pa-tier-preview {
+    padding: 15px 0;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+.pa-tier-preview:last-child {
+    border-bottom: none;
+}
+
+.pa-tier-preview h4 {
+    margin: 0 0 5px;
+    color: #2c3e50;
+}
+
+.pa-tier-price {
+    color: #ff424d;
+    font-weight: 700;
+}
+
+/* Membership Tiers */
+.pa-membership-tiers {
+    padding: 40px 0;
+}
+
+.pa-tiers-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.pa-tiers-header h2 {
+    font-size: 36px;
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+.pa-tiers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.pa-tier-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.pa-tier-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    border-color: #ff424d;
+}
+
+.pa-tier-card.pa-tier-full {
+    opacity: 0.6;
+}
+
+.pa-tier-header h3 {
+    margin: 0 0 10px;
+    font-size: 24px;
+    color: #2c3e50;
+}
+
+.pa-tier-price {
+    font-size: 42px;
+    font-weight: 700;
+    color: #ff424d;
+    margin-bottom: 20px;
+}
+
+.pa-tier-period {
+    font-size: 14px;
+    color: #666;
+    font-weight: 400;
+}
+
+.pa-tier-description {
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.pa-tier-benefits {
+    margin: 20px 0;
+}
+
+.pa-tier-benefits h4 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.pa-tier-benefits ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.pa-tier-benefits li {
+    padding: 8px 0;
+    color: #444;
+}
+
+.pa-tier-members {
+    color: #666;
+    font-size: 14px;
+    margin: 15px 0;
+    text-align: center;
+}
+
+.pa-tier-action {
+    margin-top: 20px;
+}
+
+/* Posts Feed */
+.pa-posts-feed {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.pa-post-item {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.pa-post-item.pa-post-locked {
+    position: relative;
+}
+
+.pa-post-header h2 {
+    margin: 0 0 10px;
+    font-size: 28px;
+}
+
+.pa-post-header h2 a {
+    color: #2c3e50;
+    text-decoration: none;
+}
+
+.pa-post-header h2 a:hover {
+    color: #ff424d;
+}
+
+.pa-post-meta {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.pa-post-lock-icon {
+    margin-left: 10px;
+}
+
+.pa-post-content {
+    line-height: 1.8;
+    color: #444;
+}
+
+.pa-post-footer {
+    margin-top: 20px;
+}
+
+/* Locked Content */
+.pa-locked-content {
+    text-align: center;
+    padding: 60px 20px;
+    background: #f6f8fa;
+    border-radius: 12px;
+    margin: 20px 0;
+}
+
+.pa-lock-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.pa-locked-content h3 {
+    margin: 0 0 15px;
+    color: #2c3e50;
+}
+
+/* My Membership */
+.pa-my-membership {
+    max-width: 800px;
+    margin: 40px auto;
+}
+
+.pa-membership-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.pa-membership-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+.pa-membership-details p {
+    margin: 10px 0;
+}
+
+.pa-membership-benefits {
+    margin: 20px 0;
+}
+
+.pa-membership-benefits ul {
+    list-style: none;
+    margin: 10px 0;
+    padding: 0;
+}
+
+.pa-membership-benefits li {
+    padding: 8px 0;
+}
+
+.pa-membership-actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e1e4e8;
+}
+
+.pa-no-membership {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+/* Buttons */
+.pa-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background: #ff424d;
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.pa-btn:hover {
+    background: #e03a45;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 66, 77, 0.3);
+}
+
+.pa-btn-block {
+    display: block;
+    width: 100%;
+}
+
+.pa-btn-primary {
+    background: #ff424d;
+}
+
+.pa-btn-secondary {
+    background: #667eea;
+}
+
+.pa-btn-danger {
+    background: #dc3545;
+}
+
+.pa-btn-disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.pa-btn-disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Badges */
+.pa-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.pa-badge-active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.pa-badge-cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pa-profile-content {
+        grid-template-columns: 1fr;
+    }
+
+    .pa-profile-info {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .pa-tiers-grid {
+        grid-template-columns: 1fr;
+    }
+}

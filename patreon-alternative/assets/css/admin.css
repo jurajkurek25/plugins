@@ -1,0 +1,201 @@
+/* Admin Styles for Patreon Alternative */
+
+.pa-admin-dashboard,
+.pa-admin-tiers,
+.pa-admin-members,
+.pa-admin-payments,
+.pa-admin-settings {
+    margin: 20px 20px 0 0;
+}
+
+/* Dashboard Welcome */
+.pa-dashboard-welcome {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.pa-dashboard-welcome h2 {
+    margin: 0 0 10px;
+    color: #fff;
+}
+
+/* Stats Grid */
+.pa-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.pa-stat-card {
+    background: #fff;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.pa-stat-icon {
+    font-size: 48px;
+    line-height: 1;
+}
+
+.pa-stat-content {
+    flex: 1;
+}
+
+.pa-stat-label {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.pa-stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+/* Quick Actions */
+.pa-quick-actions {
+    margin-bottom: 30px;
+}
+
+.pa-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.pa-action-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #2c3e50;
+    transition: all 0.3s ease;
+}
+
+.pa-action-card:hover {
+    background: #f6f8fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.pa-action-card .dashicons {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+/* Setup Checklist */
+.pa-setup-checklist {
+    background: #fff;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.pa-checklist {
+    list-style: none;
+    margin: 15px 0 0;
+}
+
+.pa-checklist li {
+    padding: 12px 0;
+    border-bottom: 1px solid #e1e4e8;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pa-checklist li:last-child {
+    border-bottom: none;
+}
+
+.pa-checklist li .dashicons {
+    color: #ccc;
+}
+
+.pa-checklist li.completed .dashicons {
+    color: #52c41a;
+}
+
+/* Tiers List */
+.pa-tiers-list {
+    margin-top: 20px;
+}
+
+.pa-empty-state {
+    background: #fff;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    padding: 60px 20px;
+    text-align: center;
+    color: #666;
+}
+
+/* Badges */
+.pa-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.pa-badge-success,
+.pa-badge-active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.pa-badge-inactive {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.pa-badge-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.pa-badge-completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.pa-badge-cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Settings Tabs */
+.pa-settings-tab {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ccd0d4;
+    border-top: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pa-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pa-actions-grid {
+        grid-template-columns: 1fr;
+    }
+}
