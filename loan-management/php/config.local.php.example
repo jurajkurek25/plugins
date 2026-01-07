@@ -1,0 +1,12 @@
+<?php
+/**
+ * Lokálna konfigurácia - príklad
+ *
+ * Skopírujte tento súbor ako config.local.php a upravte hodnoty
+ */
+
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'loan_management');
+define('DB_USER', 'your_database_user');
+define('DB_PASS', 'your_database_password');
+define('DB_CHARSET', 'utf8mb4');

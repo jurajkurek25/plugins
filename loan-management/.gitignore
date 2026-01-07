@@ -1,0 +1,25 @@
+# Lokálna konfigurácia
+php/config.local.php
+
+# IDE a editory
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+error_log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Cache
+cache/
+tmp/
+
+# Uploads (ak budú v budúcnosti)
+uploads/
