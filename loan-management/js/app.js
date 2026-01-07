@@ -601,6 +601,13 @@ async function loadQRCode() {
     const container = document.getElementById('qr-code-container');
     container.innerHTML = '<div class="spinner"></div><p>Načítavam QR kód...</p>';
 
+    // Kontrola či je QRCode knižnica dostupná
+    if (typeof QRCode === 'undefined') {
+        container.innerHTML = '<p class="alert alert-danger">QR kód knižnica sa nenačítala. Obnovte stránku.</p>';
+        console.error('QRCode library not loaded');
+        return;
+    }
+
     try {
         const response = await fetch('php/api.php?action=get_login_token');
         const result = await response.json();
@@ -627,11 +634,11 @@ async function loadQRCode() {
             // Uloženie URL pre kopírovanie
             window.currentLoginUrl = loginUrl;
         } else {
-            container.innerHTML = '<p class="alert alert-danger">Chyba pri načítaní QR kódu</p>';
+            container.innerHTML = '<p class="alert alert-danger">Chyba: ' + (result.message || 'Token nebol nájdený') + '</p>';
         }
     } catch (error) {
         console.error('Load QR code error:', error);
-        container.innerHTML = '<p class="alert alert-danger">Chyba pri načítaní QR kódu</p>';
+        container.innerHTML = '<p class="alert alert-danger">Chyba pri načítaní QR kódu: ' + error.message + '</p>';
     }
 }
 

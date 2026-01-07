@@ -228,18 +228,25 @@ $loginUrl = $protocol . '://' . $host . dirname($_SERVER['PHP_SELF']) . '/login-
     </div>
 
     <!-- QR Code Library -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         // Vygenerovanie QR kódu
         const loginUrl = <?php echo json_encode($loginUrl); ?>;
 
-        new QRCode(document.getElementById('card-qr-code'), {
-            text: loginUrl,
-            width: 256,
-            height: 256,
-            colorDark: '#000000',
-            colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.H
+        // Počkať na načítanie DOM a QRCode knižnice
+        window.addEventListener('load', function() {
+            if (typeof QRCode !== 'undefined') {
+                new QRCode(document.getElementById('card-qr-code'), {
+                    text: loginUrl,
+                    width: 256,
+                    height: 256,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            } else {
+                document.getElementById('card-qr-code').innerHTML = '<p style="color: red;">Chyba: QR kód knižnica sa nenačítala.</p>';
+            }
         });
 
         // Funkcia na stiahnutie kartičky ako obrázok
