@@ -13,6 +13,7 @@ $currentUser = $auth->getCurrentUser();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Systém správy pôžičiek</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -33,6 +34,7 @@ $currentUser = $auth->getCurrentUser();
                         <li><a href="#" class="nav-link" data-section="borrowed">Požičal som si</a></li>
                         <li><a href="#" class="nav-link" data-section="lent">Požičal som</a></li>
                         <li><a href="#" class="nav-link" data-section="pending">Čakajúce žiadosti</a></li>
+                        <li><a href="#" class="nav-link" data-section="qr-code">🎫 Moja kartička</a></li>
                         <li><a href="#" class="nav-link" data-section="notifications">Notifikácie</a></li>
                     </ul>
                 </nav>
@@ -94,6 +96,41 @@ $currentUser = $auth->getCurrentUser();
                 <div id="section-pending" class="content-section hidden">
                     <h2>Čakajúce žiadosti</h2>
                     <div id="pending-loans-container"></div>
+                </div>
+
+                <!-- QR KÓD SEKCIA -->
+                <div id="section-qr-code" class="content-section hidden">
+                    <h2>🎫 Moja prihlasovacia kartička</h2>
+
+                    <div class="alert alert-info">
+                        <strong>Ako to funguje?</strong><br>
+                        Vytlačte si alebo uložte túto kartičku. Ľudia, ktorým požičiavate, môžu pomocou QR kódu rýchlo vidieť svoje pôžičky bez zadávania hesla.
+                    </div>
+
+                    <div style="margin: 30px 0;">
+                        <div id="qr-code-container" style="text-align: center;">
+                            <div class="spinner"></div>
+                            <p>Načítavam QR kód...</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="openCardPreview()">
+                            🖼️ Zobraziť kartičku
+                        </button>
+                        <button class="btn btn-secondary" onclick="regenerateToken()">
+                            🔄 Generovať nový QR kód
+                        </button>
+                        <button class="btn btn-secondary" onclick="copyLoginLink()">
+                            📋 Kopírovať odkaz
+                        </button>
+                    </div>
+
+                    <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                        <h3>Bezpečnostné upozornenie</h3>
+                        <p>⚠️ Tento QR kód umožňuje prihlásenie do vášho účtu bez hesla. Zdieľajte ho len s dôveryhodnými osobami.</p>
+                        <p>💡 Ak sa domnievate, že bol váš QR kód kompromitovaný, použite tlačidlo "Generovať nový QR kód".</p>
+                    </div>
                 </div>
 
                 <!-- NOTIFIKÁCIE SEKCIA -->

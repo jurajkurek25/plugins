@@ -73,6 +73,9 @@ document.querySelectorAll('.nav-link').forEach(link => {
             case 'pending':
                 loadPendingLoans();
                 break;
+            case 'qr-code':
+                loadQRCode();
+                break;
             case 'notifications':
                 loadNotifications();
                 break;
@@ -591,6 +594,94 @@ function renderNotifications(notifications) {
     });
 
     container.innerHTML = html;
+}
+
+// Načítanie QR kódu
+async function loadQRCode() {
+    const container = document.getElementById('qr-code-container');
+    container.innerHTML = '<div class="spinner"></div><p>Načítavam QR kód...</p>';
+
+    try {
+        const response = await fetch('php/api.php?action=get_login_token');
+        const result = await response.json();
+
+        if (result.success && result.token) {
+            const protocol = window.location.protocol;
+            const host = window.location.host;
+            const path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+            const loginUrl = `${protocol}//${host}${path}/login-token.php?token=${result.token}`;
+
+            // Vyčistenie containera
+            container.innerHTML = '';
+
+            // Vytvorenie QR kódu
+            new QRCode(container, {
+                text: loginUrl,
+                width: 256,
+                height: 256,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            // Uloženie URL pre kopírovanie
+            window.currentLoginUrl = loginUrl;
+        } else {
+            container.innerHTML = '<p class="alert alert-danger">Chyba pri načítaní QR kódu</p>';
+        }
+    } catch (error) {
+        console.error('Load QR code error:', error);
+        container.innerHTML = '<p class="alert alert-danger">Chyba pri načítaní QR kódu</p>';
+    }
+}
+
+// Regenerácia tokenu
+async function regenerateToken() {
+    if (!confirm('Naozaj chcete vygenerovať nový QR kód? Starý QR kód prestane fungovať.')) {
+        return;
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append('action', 'regenerate_login_token');
+
+        const response = await fetch('php/api.php', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showAlert('Nový QR kód bol vygenerovaný', 'success');
+            loadQRCode(); // Znovu načítaj QR kód
+        } else {
+            showAlert(result.message, 'danger');
+        }
+    } catch (error) {
+        showAlert('Chyba pri generovaní nového QR kódu', 'danger');
+        console.error('Regenerate token error:', error);
+    }
+}
+
+// Kopírovanie prihlasovacieho odkazu
+function copyLoginLink() {
+    if (!window.currentLoginUrl) {
+        showAlert('Najprv načítajte QR kód', 'warning');
+        return;
+    }
+
+    navigator.clipboard.writeText(window.currentLoginUrl).then(() => {
+        showAlert('Odkaz bol skopírovaný do schránky', 'success');
+    }).catch(err => {
+        showAlert('Chyba pri kopírovaní odkazu', 'danger');
+        console.error('Copy error:', err);
+    });
+}
+
+// Otvorenie náhľadu kartičky
+function openCardPreview() {
+    window.open('card.php', '_blank');
 }
 
 // Zatvorenie modalov pri kliku mimo

@@ -162,4 +162,130 @@ class Auth {
             exit;
         }
     }
+
+    /**
+     * Vygenerovanie unikátneho login tokenu
+     */
+    private function generateLoginToken() {
+        return bin2hex(random_bytes(32));
+    }
+
+    /**
+     * Vytvorenie alebo regenerácia login tokenu pre používateľa
+     */
+    public function createLoginToken($userId = null) {
+        if ($userId === null) {
+            $userId = $this->getUserId();
+        }
+
+        if (!$userId) {
+            return [
+                'success' => false,
+                'message' => 'Používateľ nie je prihlásený'
+            ];
+        }
+
+        $token = $this->generateLoginToken();
+
+        try {
+            $stmt = $this->db->prepare("UPDATE users SET login_token = ? WHERE id = ?");
+            $stmt->execute([$token, $userId]);
+
+            return [
+                'success' => true,
+                'token' => $token,
+                'message' => 'Token bol vygenerovaný'
+            ];
+        } catch (PDOException $e) {
+            error_log("Create login token error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Chyba pri vytváraní tokenu'
+            ];
+        }
+    }
+
+    /**
+     * Získanie login tokenu prihláseného používateľa
+     */
+    public function getLoginToken() {
+        $userId = $this->getUserId();
+
+        if (!$userId) {
+            return null;
+        }
+
+        $stmt = $this->db->prepare("SELECT login_token FROM users WHERE id = ?");
+        $stmt->execute([$userId]);
+        $result = $stmt->fetch();
+
+        // Ak token neexistuje, vytvor nový
+        if (!$result || !$result['login_token']) {
+            $tokenResult = $this->createLoginToken($userId);
+            return $tokenResult['success'] ? $tokenResult['token'] : null;
+        }
+
+        return $result['login_token'];
+    }
+
+    /**
+     * Prihlásenie používateľa cez login token
+     */
+    public function loginWithToken($token) {
+        if (empty($token)) {
+            return [
+                'success' => false,
+                'message' => 'Token je povinný'
+            ];
+        }
+
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM users WHERE login_token = ?");
+            $stmt->execute([$token]);
+            $user = $stmt->fetch();
+
+            if (!$user) {
+                return [
+                    'success' => false,
+                    'message' => 'Neplatný token'
+                ];
+            }
+
+            // Nastavenie session
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['full_name'] = $user['full_name'];
+            $_SESSION['logged_in'] = true;
+
+            return [
+                'success' => true,
+                'message' => 'Prihlásenie úspešné',
+                'user' => [
+                    'id' => $user['id'],
+                    'username' => $user['username'],
+                    'full_name' => $user['full_name'],
+                    'email' => $user['email']
+                ]
+            ];
+        } catch (PDOException $e) {
+            error_log("Token login error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Chyba pri prihlásení'
+            ];
+        }
+    }
+
+    /**
+     * Získanie údajov používateľa vrátane login tokenu
+     */
+    public function getCurrentUserWithToken() {
+        if (!$this->isLoggedIn()) {
+            return null;
+        }
+
+        $stmt = $this->db->prepare("SELECT id, username, email, full_name, login_token, created_at FROM users WHERE id = ?");
+        $stmt->execute([$this->getUserId()]);
+        return $stmt->fetch();
+    }
 }

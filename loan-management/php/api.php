@@ -45,6 +45,19 @@ try {
             $result = $user ? ['success' => true, 'user' => $user] : ['success' => false];
             break;
 
+        case 'get_login_token':
+            $token = $auth->getLoginToken();
+            $result = $token ? ['success' => true, 'token' => $token] : ['success' => false, 'message' => 'Token nie je dostupný'];
+            break;
+
+        case 'regenerate_login_token':
+            $result = $auth->createLoginToken();
+            break;
+
+        case 'login_with_token':
+            $result = $auth->loginWithToken($_POST['token'] ?? $_GET['token'] ?? '');
+            break;
+
         // PÔŽIČKY
         case 'create_loan_request':
             $result = $loans->createLoanRequest(
