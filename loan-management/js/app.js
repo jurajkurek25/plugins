@@ -596,17 +596,10 @@ function renderNotifications(notifications) {
     container.innerHTML = html;
 }
 
-// Načítanie QR kódu
+// Načítanie prihlasovacieho odkazu
 async function loadQRCode() {
-    const container = document.getElementById('qr-code-container');
-    container.innerHTML = '<div class="spinner"></div><p>Načítavam QR kód...</p>';
-
-    // Kontrola či je QRCode knižnica dostupná
-    if (typeof QRCode === 'undefined') {
-        container.innerHTML = '<p class="alert alert-danger">QR kód knižnica sa nenačítala. Obnovte stránku.</p>';
-        console.error('QRCode library not loaded');
-        return;
-    }
+    const container = document.getElementById('token-link-container');
+    container.innerHTML = '<div class="spinner"></div><p>Načítavam prihlasovací odkaz...</p>';
 
     try {
         const response = await fetch('php/api.php?action=get_login_token');
@@ -618,18 +611,18 @@ async function loadQRCode() {
             const path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
             const loginUrl = `${protocol}//${host}${path}/login-token.php?token=${result.token}`;
 
-            // Vyčistenie containera
-            container.innerHTML = '';
-
-            // Vytvorenie QR kódu
-            new QRCode(container, {
-                text: loginUrl,
-                width: 256,
-                height: 256,
-                colorDark: '#000000',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.H
-            });
+            // Zobrazenie odkazu
+            container.innerHTML = `
+                <h3 style="margin-top: 0; color: #333;">📱 Váš prihlasovací odkaz:</h3>
+                <div style="background: white; padding: 15px; border-radius: 8px; border: 2px solid #4a90e2; margin: 15px 0;">
+                    <input type="text" value="${loginUrl}" readonly
+                           style="width: 100%; padding: 10px; border: none; font-family: monospace; font-size: 14px; background: transparent; color: #333;"
+                           onclick="this.select()" id="login-url-input">
+                </div>
+                <p style="color: #666; font-size: 14px; margin-top: 10px;">
+                    💡 Kliknite na odkaz pre označenie a kopírovanie, alebo použite tlačidlo "📋 Kopírovať odkaz" nižšie.
+                </p>
+            `;
 
             // Uloženie URL pre kopírovanie
             window.currentLoginUrl = loginUrl;
@@ -637,14 +630,14 @@ async function loadQRCode() {
             container.innerHTML = '<p class="alert alert-danger">Chyba: ' + (result.message || 'Token nebol nájdený') + '</p>';
         }
     } catch (error) {
-        console.error('Load QR code error:', error);
-        container.innerHTML = '<p class="alert alert-danger">Chyba pri načítaní QR kódu: ' + error.message + '</p>';
+        console.error('Load login link error:', error);
+        container.innerHTML = '<p class="alert alert-danger">Chyba pri načítaní odkazu: ' + error.message + '</p>';
     }
 }
 
 // Regenerácia tokenu
 async function regenerateToken() {
-    if (!confirm('Naozaj chcete vygenerovať nový QR kód? Starý QR kód prestane fungovať.')) {
+    if (!confirm('Naozaj chcete vygenerovať nový odkaz? Starý odkaz prestane fungovať.')) {
         return;
     }
 
@@ -660,13 +653,13 @@ async function regenerateToken() {
         const result = await response.json();
 
         if (result.success) {
-            showAlert('Nový QR kód bol vygenerovaný', 'success');
-            loadQRCode(); // Znovu načítaj QR kód
+            showAlert('Nový odkaz bol vygenerovaný', 'success');
+            loadQRCode(); // Znovu načítaj odkaz
         } else {
             showAlert(result.message, 'danger');
         }
     } catch (error) {
-        showAlert('Chyba pri generovaní nového QR kódu', 'danger');
+        showAlert('Chyba pri generovaní nového odkazu', 'danger');
         console.error('Regenerate token error:', error);
     }
 }

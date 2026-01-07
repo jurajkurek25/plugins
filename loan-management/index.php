@@ -13,7 +13,6 @@ $currentUser = $auth->getCurrentUser();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Systém správy pôžičiek</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -104,22 +103,22 @@ $currentUser = $auth->getCurrentUser();
 
                     <div class="alert alert-info">
                         <strong>Ako to funguje?</strong><br>
-                        Vytlačte si alebo uložte túto kartičku. Ľudia, ktorým požičiavate, môžu pomocou QR kódu rýchlo vidieť svoje pôžičky bez zadávania hesla.
+                        Zdieľajte tento odkaz s ľuďmi, ktorým požičiavate. Môžu sa cez neho prihlásiť bez hesla a vidieť svoje pôžičky.
                     </div>
 
                     <div style="margin: 30px 0;">
-                        <div id="qr-code-container" style="text-align: center;">
+                        <div id="token-link-container" style="padding: 20px; background: #f8f9fa; border-radius: 8px;">
                             <div class="spinner"></div>
-                            <p>Načítavam QR kód...</p>
+                            <p>Načítavam prihlasovací odkaz...</p>
                         </div>
                     </div>
 
                     <div style="margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
                         <button class="btn btn-primary" onclick="openCardPreview()">
-                            🖼️ Zobraziť kartičku
+                            🖼️ Zobraziť QR kartičku
                         </button>
                         <button class="btn btn-secondary" onclick="regenerateToken()">
-                            🔄 Generovať nový QR kód
+                            🔄 Generovať nový odkaz
                         </button>
                         <button class="btn btn-secondary" onclick="copyLoginLink()">
                             📋 Kopírovať odkaz
@@ -128,8 +127,8 @@ $currentUser = $auth->getCurrentUser();
 
                     <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
                         <h3>Bezpečnostné upozornenie</h3>
-                        <p>⚠️ Tento QR kód umožňuje prihlásenie do vášho účtu bez hesla. Zdieľajte ho len s dôveryhodnými osobami.</p>
-                        <p>💡 Ak sa domnievate, že bol váš QR kód kompromitovaný, použite tlačidlo "Generovať nový QR kód".</p>
+                        <p>⚠️ Tento odkaz umožňuje prihlásenie do vášho účtu bez hesla. Zdieľajte ho len s dôveryhodnými osobami.</p>
+                        <p>💡 Ak sa domnievate, že bol váš odkaz kompromitovaný, použite tlačidlo "Generovať nový odkaz".</p>
                     </div>
                 </div>
 
