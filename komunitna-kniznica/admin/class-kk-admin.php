@@ -72,6 +72,16 @@ class KK_Admin {
             'kk-settings',
             array('KK_Admin_Settings', 'display_page')
         );
+
+        // Maruritka Flashcards
+        add_submenu_page(
+            'komunitna-kniznica',
+            __('Flashcards - Balíčky', 'komunitna-kniznica'),
+            __('Flashcards', 'komunitna-kniznica'),
+            'manage_kk_library',
+            'kk-flashcards',
+            array('KK_Admin_Flashcards', 'display_page')
+        );
     }
 
     /**

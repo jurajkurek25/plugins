@@ -67,6 +67,7 @@ class Komunitna_Kniznica {
         require_once KK_PLUGIN_DIR . 'includes/class-kk-woocommerce.php';
         require_once KK_PLUGIN_DIR . 'includes/class-kk-auth.php';
         require_once KK_PLUGIN_DIR . 'includes/class-kk-dashboard.php';
+        require_once KK_PLUGIN_DIR . 'includes/class-kk-flashcards.php';
 
         // Admin triedy
         if (is_admin()) {
@@ -74,6 +75,7 @@ class Komunitna_Kniznica {
             require_once KK_PLUGIN_DIR . 'admin/class-kk-admin-books.php';
             require_once KK_PLUGIN_DIR . 'admin/class-kk-admin-lendings.php';
             require_once KK_PLUGIN_DIR . 'admin/class-kk-admin-settings.php';
+            require_once KK_PLUGIN_DIR . 'admin/class-kk-admin-flashcards.php';
         }
 
         // Public triedy
@@ -112,6 +114,7 @@ class Komunitna_Kniznica {
         KK_WooCommerce::get_instance();
         KK_Auth::get_instance();
         KK_Dashboard::get_instance();
+        KK_Flashcards::get_instance();
         KK_Public::get_instance();
         KK_Shortcodes::get_instance();
 
@@ -120,6 +123,7 @@ class Komunitna_Kniznica {
             KK_Admin_Books::get_instance();
             KK_Admin_Lendings::get_instance();
             KK_Admin_Settings::get_instance();
+            KK_Admin_Flashcards::get_instance();
         }
     }
 

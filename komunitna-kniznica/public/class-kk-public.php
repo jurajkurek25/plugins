@@ -57,7 +57,8 @@ class KK_Public {
                 'return_book' => wp_create_nonce('kk_return_book_nonce'),
                 'add_rating' => wp_create_nonce('kk_add_rating_nonce'),
                 'notifications' => wp_create_nonce('kk_notifications_nonce'),
-                'upload_image' => wp_create_nonce('kk_upload_image_nonce')
+                'upload_image' => wp_create_nonce('kk_upload_image_nonce'),
+                'flashcards' => wp_create_nonce('kk_flashcards_nonce')
             )
         ));
     }

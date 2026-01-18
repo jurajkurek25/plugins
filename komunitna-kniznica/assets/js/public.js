@@ -295,3 +295,221 @@
     });
 
 })(jQuery);
+
+/**
+ * ===================================
+ * MARURITKA FLASHCARDS JAVASCRIPT
+ * ===================================
+ */
+
+(function($) {
+    'use strict';
+
+    // Flashcards Deck Learning
+    const FlashcardsDeck = {
+        currentCardIndex: 0,
+        cards: [],
+        deckId: null,
+        stats: null,
+
+        init: function() {
+            const $container = $('.maruritka-flashcards-deck');
+            if ($container.length === 0) return;
+
+            // Načítanie dát
+            const data = $('#flashcard-data').text();
+            if (!data) return;
+
+            try {
+                const jsonData = JSON.parse(data);
+                this.cards = jsonData.cards || [];
+                this.deckId = jsonData.deck_id;
+                this.stats = jsonData.stats;
+
+                if (this.cards.length > 0) {
+                    this.bindEvents();
+                    this.showCard(0);
+                }
+            } catch (e) {
+                console.error('Error parsing flashcard data:', e);
+            }
+
+            // Reset progress button
+            $('#reset-progress-btn').on('click', () => this.resetProgress());
+        },
+
+        bindEvents: function() {
+            // Show answer
+            $('#show-answer-btn').on('click', () => this.showAnswer());
+
+            // Rating buttons
+            $('.rating-btn').on('click', (e) => {
+                const quality = $(e.currentTarget).data('quality');
+                this.submitRating(quality);
+            });
+
+            // Show hint
+            $('#show-hint-btn').on('click', () => {
+                $('#card-hint').slideToggle();
+            });
+
+            // Show explanation
+            $('#show-explanation-btn').on('click', () => {
+                $('#card-explanation').slideToggle();
+            });
+
+            // Continue learning
+            $('#continue-learning-btn').on('click', () => {
+                location.reload();
+            });
+        },
+
+        showCard: function(index) {
+            if (index >= this.cards.length) {
+                this.showSessionComplete();
+                return;
+            }
+
+            this.currentCardIndex = index;
+            const card = this.cards[index];
+
+            // Reset card state
+            $('#flashcard').removeClass('flipped');
+            $('#rating-buttons').hide();
+            $('#show-answer-btn').show();
+            $('#card-hint').hide();
+            $('#card-explanation').hide();
+
+            // Update content
+            $('#card-question').html(card.question);
+            $('#card-answer').html(card.answer);
+
+            // Hint
+            if (card.hint) {
+                $('#card-hint-text').html(card.hint);
+                $('#show-hint-btn').show();
+            } else {
+                $('#show-hint-btn').hide();
+            }
+
+            // Explanation
+            if (card.explanation) {
+                $('#card-explanation-text').html(card.explanation);
+                $('#show-explanation-btn').show();
+            } else {
+                $('#show-explanation-btn').hide();
+            }
+
+            // Update progress
+            this.updateProgress();
+        },
+
+        showAnswer: function() {
+            $('#flashcard').addClass('flipped');
+            $('#show-answer-btn').hide();
+            $('#rating-buttons').fadeIn();
+        },
+
+        submitRating: function(quality) {
+            const card = this.cards[this.currentCardIndex];
+
+            // Disable buttons
+            $('.rating-btn').prop('disabled', true);
+
+            // AJAX request
+            $.ajax({
+                url: kkPublic.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'kk_submit_card_review',
+                    nonce: kkPublic.nonces.flashcards,
+                    card_id: card.id,
+                    quality: quality
+                },
+                success: (response) => {
+                    if (response.success) {
+                        // Move to next card
+                        setTimeout(() => {
+                            $('.rating-btn').prop('disabled', false);
+                            this.showCard(this.currentCardIndex + 1);
+                        }, 300);
+                    } else {
+                        alert(response.data.message || 'Chyba pri ukladaní odpovede');
+                        $('.rating-btn').prop('disabled', false);
+                    }
+                },
+                error: () => {
+                    alert('Chyba pripojenia');
+                    $('.rating-btn').prop('disabled', false);
+                }
+            });
+        },
+
+        updateProgress: function() {
+            const current = this.currentCardIndex + 1;
+            const total = this.cards.length;
+            const percent = (current / total) * 100;
+
+            $('#current-card-num').text(current);
+            $('#total-cards-num').text(total);
+            $('#session-progress-fill').css('width', percent + '%');
+        },
+
+        showSessionComplete: function() {
+            $('.flashcard-container').hide();
+            $('#session-complete').fadeIn();
+
+            // Stats
+            const sessionStats = `
+                <div class="stat-box">
+                    <span class="stat-number">${this.cards.length}</span>
+                    <span class="stat-label">Kartičiek precvičených</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">${this.stats.reviewing_cards}</span>
+                    <span class="stat-label">Kartičiek naučených</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">${this.stats.accuracy}%</span>
+                    <span class="stat-label">Úspešnosť</span>
+                </div>
+            `;
+
+            $('#session-stats').html(sessionStats);
+            $('#completed-count').text(this.cards.length);
+        },
+
+        resetProgress: function() {
+            if (!confirm('Naozaj chceš resetovať celý progress pre tento balíček? Táto akcia je nevratná!')) {
+                return;
+            }
+
+            $.ajax({
+                url: kkPublic.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'kk_reset_deck_progress',
+                    nonce: kkPublic.nonces.flashcards,
+                    deck_id: this.deckId
+                },
+                success: (response) => {
+                    if (response.success) {
+                        alert('Progress bol resetovaný');
+                        location.reload();
+                    } else {
+                        alert(response.data.message || 'Chyba pri resetovaní');
+                    }
+                },
+                error: () => {
+                    alert('Chyba pripojenia');
+                }
+            });
+        }
+    };
+
+    // Initialize on document ready
+    $(document).ready(function() {
+        FlashcardsDeck.init();
+    });
+
+})(jQuery);

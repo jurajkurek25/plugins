@@ -38,6 +38,9 @@ class KK_Install {
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}kk_lendings");
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}kk_ratings");
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}kk_notifications");
+        $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}kk_flashcard_decks");
+        $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}kk_flashcards");
+        $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}kk_flashcard_progress");
     }
 
     /**
@@ -134,11 +137,75 @@ class KK_Install {
             KEY is_read (is_read)
         ) $charset_collate;";
 
+        // Tabuľka flashcard decks (balíčky kartičiek)
+        $sql_flashcard_decks = "CREATE TABLE {$wpdb->prefix}kk_flashcard_decks (
+            id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            title varchar(255) NOT NULL,
+            description text DEFAULT NULL,
+            category varchar(100) DEFAULT NULL,
+            subject varchar(100) DEFAULT NULL,
+            difficulty varchar(20) DEFAULT 'medium',
+            is_public tinyint(1) NOT NULL DEFAULT 1,
+            created_by bigint(20) unsigned NOT NULL,
+            created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY  (id),
+            KEY category (category),
+            KEY subject (subject),
+            KEY is_public (is_public),
+            KEY created_by (created_by)
+        ) $charset_collate;";
+
+        // Tabuľka flashcards (jednotlivé kartičky)
+        $sql_flashcards = "CREATE TABLE {$wpdb->prefix}kk_flashcards (
+            id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            deck_id bigint(20) unsigned NOT NULL,
+            question text NOT NULL,
+            answer text NOT NULL,
+            hint text DEFAULT NULL,
+            explanation text DEFAULT NULL,
+            card_order int(11) NOT NULL DEFAULT 0,
+            created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY  (id),
+            KEY deck_id (deck_id),
+            KEY card_order (card_order)
+        ) $charset_collate;";
+
+        // Tabuľka flashcard progress (pokrok používateľa s SM-2 algoritmom)
+        $sql_flashcard_progress = "CREATE TABLE {$wpdb->prefix}kk_flashcard_progress (
+            id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+            user_id bigint(20) unsigned NOT NULL,
+            card_id bigint(20) unsigned NOT NULL,
+            deck_id bigint(20) unsigned NOT NULL,
+            easiness_factor decimal(3,2) NOT NULL DEFAULT 2.50,
+            interval_days int(11) NOT NULL DEFAULT 0,
+            repetitions int(11) NOT NULL DEFAULT 0,
+            last_reviewed datetime DEFAULT NULL,
+            next_review datetime DEFAULT NULL,
+            quality_rating tinyint(1) DEFAULT NULL,
+            total_reviews int(11) NOT NULL DEFAULT 0,
+            correct_reviews int(11) NOT NULL DEFAULT 0,
+            status varchar(20) NOT NULL DEFAULT 'new',
+            created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY  (id),
+            KEY user_id (user_id),
+            KEY card_id (card_id),
+            KEY deck_id (deck_id),
+            KEY next_review (next_review),
+            KEY status (status),
+            UNIQUE KEY unique_progress (user_id,card_id)
+        ) $charset_collate;";
+
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql_books);
         dbDelta($sql_lendings);
         dbDelta($sql_ratings);
         dbDelta($sql_notifications);
+        dbDelta($sql_flashcard_decks);
+        dbDelta($sql_flashcards);
+        dbDelta($sql_flashcard_progress);
     }
 
     /**
