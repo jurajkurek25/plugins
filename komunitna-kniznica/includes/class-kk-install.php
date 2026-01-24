@@ -134,11 +134,17 @@ class KK_Install {
             KEY is_read (is_read)
         ) $charset_collate;";
 
+
+
+
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql_books);
         dbDelta($sql_lendings);
         dbDelta($sql_ratings);
         dbDelta($sql_notifications);
+        dbDelta($sql_flashcard_decks);
+        dbDelta($sql_flashcards);
+        dbDelta($sql_flashcard_progress);
     }
 
     /**
